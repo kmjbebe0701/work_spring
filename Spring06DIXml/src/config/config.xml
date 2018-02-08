@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	의존 관계 자동 설정 
+	
+	byName: 필드의 이름과 같은 이름을 갖는 빈 객체를 연결한다
+	byType: 필드의 타입과 같은 타입을 갖는 빈 객체를 연결한다
+	constructor: 생성자 파라미터 타입과 같은 타입을 갖는 빈 객체를 연결한다
+	
+-->
+<!-- 
+	default-autowire는 bean앨리먼트에 속해있는 모든 bean 앨리먼트의 autowire속성값을 일괄 적용할 때 사용한다
+	bean 앨리먼트의 default-autowire의 기본값은 no이다.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	default-autowire="no">
+	
+	<bean id="greeting" class="bean.GreetingService" autowire="byName"/>
+	<bean name="dao" class="bean.KorMessageDaoImpl" />
+	
+	
+</beans>

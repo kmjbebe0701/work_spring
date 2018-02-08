@@ -18,10 +18,11 @@ public class TestDrive {
 		 * 
 		 * 		** DI-2방식: UserDao dao = new OraUserDao();
 		 * 
-		 * 
+		 * 		** Factory를 이용하자
+		 * 		** DI-3방식: UserDao dao = DaoFactory.getDao("ora");
 		 * 
 		 */
-		UserDao dao = new OraUserDao();
+		UserDao dao = DaoFactory.getDao("my");
 		
 		// 3. dao객체를 이용하여 데이터베이스에 정보 저장
 		dao.insert(user1);

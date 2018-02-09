@@ -7,7 +7,7 @@ public class TestDrive {
 
 	public static void main(String[] args) {
 		// 1. 스프링설정파일 불러오기
-		ApplicationContext context = new GenericXmlApplicationContext("./config/config.xml");
+		ApplicationContext context = new GenericXmlApplicationContext("/config/config.xml");
 		// 2. ApplicationContext객체 이용하여 PersonService 객체만들기
 		 PersonService service = context.getBean("person1", PersonService.class);
 		// 3. 만든 객체로 2-2 에서 구현한 메소드 호출하기

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <!-- 
+  
+  	http://www.mybatis.org/mybatis-3/ko/configuration.html#environments 참고
+  	environments
+  		default 속성: environment 앨리먼트 중 사용하고 싶은 environment의 id 값을 적는다.
+  	environment: 데이터 베이스의 환경 설정값을 모아놓은 앨리먼트
+  	transactionManager
+  		type속성: JDBC 방식으로 트랜젝션 처리를 하겠다는 뜻
+  	dataSource
+  		type 속성: POOLED는 커넥션 풀을 사용하겠다는 뜻
+  	property: 각각 정의된 name속성에 값을 설정한 것
+   -->
+  <configuration>
+  	<environments default="development">
+  		<environment id="development">
+  			<transactionManager type="JDBC"/>
+  			<dataSource type="POOLED">
+  				<property name="driver" value="com.mysql.jdbc.Driver"/>
+  				<property name="url" value="jdbc:mysql://localhost:3306/koitt"/>
+  				<property name="username" value="root"/>
+  				<property name="password" value="koitt"/>
+  			</dataSource>
+  		</environment>
+  	</environments>
+  	
+  	<mappers>
+  		<mapper resource = "com/koitt/config/mapper.xml"/>
+  	</mappers>
+  </configuration>

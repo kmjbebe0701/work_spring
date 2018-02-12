@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+  <configuration>
+  	<mappers>	<!-- mapper 앨리먼트는 여러개 선언 가능 -->
+  		<mapper resource = "com/koitt/config/mapper.xml"/>
+  	</mappers>
+  </configuration>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 
+	jdbcTypeForNull: java에서 null값을 받으면 데이터베이스에서 어떤값으로 처리할지에 대하여 설정
+	mapUnderscoreToCamelCase: 데이터베이스 컬럼명이 만약 Underscore표기법으로 표기되어있다면
+		MyBatis에서 자동으로 Camel 표기법으로 변경하여 Mapping한다.
+		
+	typeAlias 앨리먼트: 긴 type명을 짧게 별명을 지어주는 앨리먼트
+	- type 속성: 클래스의 전체이름
+	- alias 속성: type에 해당하는 이름을 줄여서 MyBatis에서 사용할 별명
+ -->
+  <configuration>
+  	<settings>
+  		<setting name="jdbcTypeForNull" value="NULL"/>
+  		<setting name="mapUnderscoreToCamelCase" value="true"/>
+  	</settings>
+  	<typeAliases>
+  		<typeAlias type="com.koitt.model.Pet" alias="Pet"/>
+  	</typeAliases> 	
+  	<mappers>
+  		<mapper resource="com/koitt/config/mapper.xml"/>
+  	</mappers>
+  </configuration>

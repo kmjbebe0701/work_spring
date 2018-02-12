@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<!-- 
+			mapUnderscoreToCamelCase 언더바를 없애고 읽는다. 
+			
+			 - Underscore : 언더바 삭제
+			 - CamelCase : 대소문자지정(띄어쓰기 자리에 대문자로 표기 )
+			
+		-->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	<mappers>	<!-- mapper 앨리먼트는 여러개 선언 가능 -->
+		<mapper resource="com/koitt/config/mapper.xml" />
+	</mappers>
+</configuration>

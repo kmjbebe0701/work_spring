@@ -5,9 +5,8 @@
   
   <mapper namespace="com.koitt.model.Employee">
   <!-- 
-  	대소문자 구별 없음.
   	 property 속성: resultMap 앨리먼트의 type속성에 정의된 클래스의 필드와 일치
-  	 column 속성: 테이블의 column명과 일치
+  	 column 속성: 테이블의 column명과 일치(	대소문자 구별 없음.)
   	 resultMap의 type 속성: resultMap에서 사용할 타입을 지정
   	 resultMap의 id 속성: resultMap을 대표할 이름을 작성
   	 id 앨리먼트: Primary key에 해당하는 필드명과 테이블의 column명을 작성

@@ -4,30 +4,28 @@ import java.util.Date;
 
 public class Pet {
 	
-	private Integer petNo;
+	private Integer petId;
 	private String petName;
 	private String ownerName;
 	private Integer price;
 	private Date birthDate;
 	
-	public Pet() {
-	}
-	
-	public Pet(Integer petNo, String petName, String ownerName, Integer price, Date birthDate) {
-		super();
-		this.petNo = petNo;
+	public Pet() {}
+
+	public Pet(Integer petId, String petName, String ownerName, Integer price, Date birthDate) {
+		this.petId = petId;
 		this.petName = petName;
 		this.ownerName = ownerName;
 		this.price = price;
 		this.birthDate = birthDate;
 	}
 
-	public Integer getPetNo() {
-		return petNo;
+	public Integer getPetId() {
+		return petId;
 	}
 
-	public void setPetNo(Integer petNo) {
-		this.petNo = petNo;
+	public void setPetId(Integer petId) {
+		this.petId = petId;
 	}
 
 	public String getPetName() {
@@ -65,8 +63,8 @@ public class Pet {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Pet [petNo=");
-		builder.append(petNo);
+		builder.append("Pet [petId=");
+		builder.append(petId);
 		builder.append(", petName=");
 		builder.append(petName);
 		builder.append(", ownerName=");
@@ -78,9 +76,4 @@ public class Pet {
 		builder.append("]");
 		return builder.toString();
 	}
-	
-	
-
-	
-
 }

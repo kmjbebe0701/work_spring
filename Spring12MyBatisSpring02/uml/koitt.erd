@@ -23,8 +23,8 @@
       <constraint>
         <height>-1</height>
         <width>-1</width>
-        <x>74</x>
-        <y>195</y>
+        <x>42</x>
+        <y>104</y>
       </constraint>
       <sourceConnections/>
       <targetConnections>
@@ -51,8 +51,8 @@
             <constraint>
               <height>-1</height>
               <width>-1</width>
-              <x>518</x>
-              <y>157</y>
+              <x>438</x>
+              <y>69</y>
             </constraint>
             <sourceConnections>
               <net.java.amateras.db.visual.model.ForeignKeyModel reference="../../.."/>
@@ -194,7 +194,7 @@
   <dommains/>
   <dialectName>MySQL</dialectName>
   <logicalMode>false</logicalMode>
-  <jarFile>C:\ProgramData\MySQL\mysql-connector-java-5.1.45\mysql-connector-java-5.1.45-bin.jar</jarFile>
+  <jarFile>C:\mysql-connector-java-5.1.45\mysql-connector-java-5.1.45-bin.jar</jarFile>
   <jdbcDriver>com.mysql.jdbc.Driver</jdbcDriver>
   <jdbcUrl>jdbc:mysql://localhost:3306/koitt</jdbcUrl>
   <jdbcUser>root</jdbcUser>

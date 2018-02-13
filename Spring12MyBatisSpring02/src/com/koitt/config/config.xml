@@ -4,38 +4,48 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-		
-	<!-- spring 애노테이션 사용하기 위해 작성 -->	
+	
+	<!-- Spring 애노테이션 사용하기 위해 작성 -->
 	<context:annotation-config></context:annotation-config>
 	
-	<!-- com.koitt 패키지 하위의 모든 코드에서 스프링 애노테이션 사용하겠다는 뜻 -->
+	<!-- com.koitt 패키지 하위의 모든 코드에서 스프링 애노테이션을 사용하겠다는 뜻 -->
 	<context:component-scan base-package="com.koitt"></context:component-scan>
-		
+	
 	<!-- jdbc 프로퍼티 파일을 불러오기 -->
-	<context:property-placeholder location="/com/koitt/config/jdbc.properties"/>	
-		
-	<!-- 
-		JDBC Template을 위한 DataSource객체 생성
-		각 property 앨리먼트들의 name은 DataSource클래스의 setter메소드를 사용한 것이다
+	<context:property-placeholder location="/com/koitt/config/jdbc.properties"/>
+	
+	<!--
+		JDBC Template을 위한 DataSource 객체 생성
+		각 property 앨리먼트들의 name은 DataSource 클래스의 setter 메소드를 사용한 것이다.
 		예) setDriverClassName(${jdbc.driverClassName})
 	 -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" >
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName"	value="${jdbc.driverClassName}" />
-		<property name="url" 				value="${jdbc.url}" />
+		<property name="url"				value="${jdbc.url}" />
 		<property name="username"			value="${jdbc.username}" />
 		<property name="password"			value="${jdbc.password}" />
 		<property name="maxActive"			value="${jdbc.maxActive}" />
 	</bean>
 	
-	<!-- 방법1: SqlSessionFactory 객체 이용하여 SQL문 실행하는법 -->
+	<!-- 방법 1: SqlSessionFactory 객체 이용하여 SQL문 실행하는 법 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="/com/koitt/config/mybatis.xml" />
 	</bean>
 	
-	<!-- 방법2: SqlSession객체 이용하여 SQL문 실행하는법 -->
+	<!-- 방법 2: SqlSession 객체 이용하여 SQL문 실행하는 법 -->
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
 </beans>
+
+
+
+
+
+
+
+
+
+
 

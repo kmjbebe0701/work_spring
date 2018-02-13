@@ -4,12 +4,86 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.koitt.dao.PetMapper">
-  	<resultMap type="Pet" id="PetResultMap">
-  		<id property="petId" column="pet_id"/>
+  	
+  	<resultMap type="Pet" id="petResultMap">
+  		<id property="petId" column="pet_id" />
   		<result property="petName" column="pet_name"/>
   		<result property="ownerName" column="owner_name"/>
   		<result property="price" column="price"/>
   		<result property="birthDate" column="birth_date"/>
   	</resultMap>
- 
+  	
+  	<!--
+  		collection 앨리먼트
+  			property: 자바 컬렉션 필드의 필드명과 일치
+  			ofType: 컬렉션의 제네릭 부분에 명시한 타입 
+  	 -->
+  	<resultMap type="com.koitt.model.Owner" id="ownerResultMap">
+  		<id property="ownerName" column="owner_name" />
+  		<collection property="petList" ofType="Pet">
+  			<id property="petId" column="pet_id" />
+  			<result property="petName" column="pet_name"/>
+  			<result property="ownerName" column="owner_name"/>
+  			<result property="price" column="price"/>
+  			<result property="birthDate" column="birth_date"/>
+  		</collection>
+  	</resultMap>
+  	
+  	<select id="selectPet" parameterType="int" resultMap="petResultMap">
+  		SELECT * FROM pet WHERE pet_id = #{petId}
+  	</select>
+  	
+  	<select id="selectPet2" parameterType="int" resultType="Pet">
+  		SELECT * FROM pet WHERE pet_id = #{petId}
+  	</select>
+  	
+  	<select id="selectPetAll" resultType="Pet">
+  		SELECT * FROM pet
+  	</select>
+  	
+  	<select id="selectPetByNames" parameterType="hashmap" resultMap="petResultMap">
+  		SELECT * FROM pet p, owner o
+  			WHERE p.owner_name = o.owner_name
+  			AND p.pet_name = #{pet.petName}
+  			AND o.owner_name = #{owner.ownerName}
+  	</select>
+  	
+  	<select id="selectOwner" parameterType="String" resultMap="ownerResultMap">
+  		SELECT * FROM owner o, pet p
+			WHERE o.owner_name = p.owner_name
+			AND o.owner_name = #{ownerName}
+  	</select>
+  	
+  	<select id="findPet" parameterType="Pet" resultType="Pet">
+  		SELECT * FROM pet
+  		<where>
+  			<if test="petName != null">
+  				pet_name = #{petName}
+  			</if>
+  			<if test="ownerName != null">
+  				AND owner_name = #{ownerName}
+  			</if>
+  			<if test="price != null">
+  				AND price = #{price}
+  			</if>
+  		</where>
+  	</select>
+  	
+  	<insert id="insertPet" parameterType="Pet">
+  		INSERT INTO pet (pet_name, owner_name, price, birth_date)
+  		VALUES (#{petName}, #{ownerName}, #{price}, #{birthDate})
+  	</insert>
+  	
+  	<insert id="insertPet2" parameterType="hashmap">
+  		INSERT INTO pet (pet_name, owner_name, price, birth_date)
+  		VALUES (#{petName}, #{ownerName}, #{price}, #{birthDate})
+  	</insert>
+  	
   </mapper>
+  
+  
+  
+  
+  
+  
+  

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<!--
+		Servlet 클래스는 우리가 작성하지 않고 스프링 프레임워크에서 제공하는
+		DispatcherServlet 서블릿을 사용하게 된다.
+		
+		init-param 앨리먼트 부분은 스프링에게 스프링 설정파일 위치를 알려주기 위해
+		설정한 초기값이다.
+		
+		load-on-startup: Servlet 객체를 생성하는 시점을 서버가 실행되는 시점에
+		생성하도록 하여 빠르게 사용자에게 응답하도록 한다.
+		(이 설정을 하지 않으면 첫번째 사용자가 서버에 접속하는 시점에 Servlet 객체를
+		만들기 때문에 응답이 느려지는 문제가 있다.) 
+	 -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/config.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>

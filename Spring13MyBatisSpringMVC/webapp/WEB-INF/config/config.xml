@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- 스프링 MVC 컴포넌트들의 디폴트 설정을 가지고 활설화 하기위해 선언 -->
+	<mvc:annotation-driven></mvc:annotation-driven> 
+	
+	<!--
+		ViewResolver
+		예) 스프링에게 리턴값으로 "hello"라는 문자열을 리턴하면
+		스프링에서 자동으로 "/WEB-INF/views/hello.jsp" 문자열로 변경해서
+		JSP 포워딩 처리를 한다. 
+	 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<!-- 스프링에서 만든 애노테이션 사용 -->
+	<context:annotation-config></context:annotation-config>
+	
+	<!-- 스프링 애노테이션 사용범위 -->
+	<context:component-scan base-package="com.koitt.mvc" />
+	
+	<!-- 데이터베이스 설정 값을 저장한 jdbc.properties 파일을 불러오기 -->
+	<context:property-placeholder location="/WEB-INF/config/jdbc.properties"/>
+	
+	<!-- 불러온 데이터베이스 설정 값을 이용하여 DataSource 빈 객체에 설정 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" 	value="${jdbc.driverClassName}" />
+		<property name="url" 				value="${jdbc.url}" />
+		<property name="username"			value="${jdbc.username}" />
+		<property name="password"			value="${jdbc.password}" />
+		<property name="maxActive"			value="${jdbc.maxActive}" />
+	</bean>
+	
+	<!-- SqlSession 빈 객체를 생성하기 위해 SqlSessionFactory 빈 객체를 생성 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="/WEB-INF/config/mybatis.xml" />
+		<property name="mapperLocations" value="/WEB-INF/config/mapper.xml" />
+	</bean>
+	
+	<!-- 위에서 생성한 SqlSessionFactory 객체를 이용하여 SqlSession 객체를 생성 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+</beans>
+
+
+
+
+
+
+
+
+

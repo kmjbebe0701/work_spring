@@ -8,5 +8,4 @@ public class TestDrive {
 		String result = Board.class.getName();
 		System.out.println(result);
 	}
-
 }

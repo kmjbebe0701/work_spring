@@ -1,80 +1,83 @@
 package com.koitt.board.model;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Date;
 
-public class Board {
+// Java Bean, VO(Value Object), DTO(Data Transfer Object)
+public class Board implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
-	private Integer no;
-	private String title;
-	private String content;
-	private Integer userNo;
-	private Date regdate;
+	private Integer no;			// 글 번호
+	private String title;		// 글 제목
+	private String content;		// 글 내용
+	private Integer userNo;		// 사용자 번호
+	private Date regdate;		// 등록일
+	private String attachment;	// 첨부파일명
 	
-	public Board() {
-		
-	}
-	
-	
-	public Board(Integer no, String title, String content, Integer userNo, Date regdate) {
-		super();
+	// 1. 기본생성자
+	public Board() {}
+
+	// 2. 생성자 (모든 필드 초기화)
+	public Board(Integer no, String title, String content, Integer userNo, 
+			Date regdate, String attachment) {
 		this.no = no;
 		this.title = title;
 		this.content = content;
 		this.userNo = userNo;
 		this.regdate = regdate;
+		this.attachment = attachment;
 	}
 
-
+	// 3. getter, setter
 	public Integer getNo() {
 		return no;
 	}
-
 
 	public void setNo(Integer no) {
 		this.no = no;
 	}
 
-
 	public String getTitle() {
 		return title;
 	}
-
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
-
 	public String getContent() {
 		return content;
 	}
-
 
 	public void setContent(String content) {
 		this.content = content;
 	}
 
-
 	public Integer getUserNo() {
 		return userNo;
 	}
-
 
 	public void setUserNo(Integer userNo) {
 		this.userNo = userNo;
 	}
 
-
 	public Date getRegdate() {
 		return regdate;
 	}
-
 
 	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
 
+	public String getAttachment() {
+		return attachment;
+	}
 
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
+	}
+
+	// 3. hashCode
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -84,11 +87,11 @@ public class Board {
 		result = prime * result + ((regdate == null) ? 0 : regdate.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		result = prime * result + ((userNo == null) ? 0 : userNo.hashCode());
+		result = prime * result + ((attachment == null) ? 0 : attachment.hashCode());
 		return result;
 	}
 
-
-	
+	// 4. equals
 	@Override
 	public boolean equals(Object obj) {
 		// 4-1. 주소 비교
@@ -110,7 +113,7 @@ public class Board {
 		return false;
 	}
 
-
+	// 5. toString 구현
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -124,11 +127,9 @@ public class Board {
 		builder.append(userNo);
 		builder.append(", regdate=");
 		builder.append(regdate);
+		builder.append(", attachment=");
+		builder.append(attachment);
 		builder.append("]");
 		return builder.toString();
-	}
-	
-	
-	
-
+	}	
 }

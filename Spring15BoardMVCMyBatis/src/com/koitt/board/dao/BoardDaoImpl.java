@@ -2,9 +2,8 @@ package com.koitt.board.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.koitt.board.model.Board;
@@ -12,9 +11,13 @@ import com.koitt.board.model.BoardException;
 
 @Repository
 public class BoardDaoImpl implements BoardDao {
+	
+	//com.koitt.board.model.Board 와 동일
+	private static final String MAPPER_NS = Board.class.getName();
+	
 
 	@Autowired
-	private JdbcTemplate template;
+	private SqlSession session;
 
 	public BoardDaoImpl() {
 	}
@@ -22,14 +25,7 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public void insert(Board board) throws BoardException {
 		try {
-			StringBuilder sql = new StringBuilder();
-			sql.append("INSERT INTO board (title, content, user_no, regdate)");
-			sql.append("VALUES (?, ?, ?, CURDATE())");
-			
-			template.update(sql.toString(), 
-							board.getTitle(),
-							board.getContent(),
-							board.getUserNo());
+			session.insert(MAPPER_NS + ".insert-board", board);
 			
 		}catch(Exception e){
 			throw new BoardException(e.getMessage());
@@ -42,8 +38,7 @@ public class BoardDaoImpl implements BoardDao {
 		Board board = null;
 		
 		try {
-		String sql = "SELECT * FROM board WHERE no = ?";
-		board = template.queryForObject(sql, new BeanPropertyRowMapper<Board>(Board.class), no);
+			board = session.selectOne(MAPPER_NS + ".select-board", no);
 		
 		}catch (Exception e){
 			throw new BoardException(e.getMessage());
@@ -58,8 +53,7 @@ public class BoardDaoImpl implements BoardDao {
 		List<Board> list = null;
 
 		try {
-			String sql = "SELECT * FROM board ORDER BY no DESC";
-			list = template.query(sql, new BeanPropertyRowMapper<Board>(Board.class));
+			list = session.selectList(MAPPER_NS + ".select-all-board");
 			
 		} catch (Exception e) {
 			throw new BoardException(e.getMessage());
@@ -72,8 +66,7 @@ public class BoardDaoImpl implements BoardDao {
 	public int boardCount() throws BoardException {
 		Integer result = null;
 		try {
-			String sql = "SELECT COUNT(*) cnt FROM board";
-			result = template.queryForObject(sql, Integer.class);
+			result = session.selectOne(MAPPER_NS + ".select-cnt-board");
 			
 		}catch(Exception e){
 			throw new BoardException(e.getMessage());
@@ -85,11 +78,7 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public void update(Board board) throws BoardException {
 		try {
-			String sql = "UPDATE board SET title = ?, content = ?, regdate= CURDATE() WHERE no = ?";
-			template.update(sql.toString(), 
-					board.getTitle(),
-					board.getContent(),
-					board.getNo());
+			session.update(MAPPER_NS + ".update-board", board);
 			
 		}catch(Exception e){
 			throw new BoardException(e.getMessage());
@@ -100,8 +89,7 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public void delete(String no) throws BoardException {
 		try {
-			String sql = "DELETE FROM board WHERE no = ?";
-			template.update(sql, no);
+			session.delete(MAPPER_NS + ".delete-board", no);
 			
 		}catch(Exception e){
 			throw new BoardException(e.getMessage());

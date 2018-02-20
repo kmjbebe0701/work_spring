@@ -51,7 +51,7 @@ public class BookDaoImpl implements BookDao{
 	public int bookCount() throws BookException {
 		Integer result = null;
 		try {
-			String sql = "SELECT COUNT(*) cnt FROM board";
+			String sql = "SELECT COUNT(*) cnt FROM book";
 			result = template.queryForObject(sql, Integer.class);
 			
 			

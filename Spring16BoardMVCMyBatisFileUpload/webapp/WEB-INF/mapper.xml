@@ -5,8 +5,8 @@
   
   <mapper namespace="com.koitt.board.model.Board">
   	<insert id="insert-board" parameterType="Board">
-  		INSERT INTO board (title, content, user_no, regdate)
-  		VALUES (#{title}, #{content}, #{userNo}, CURDATE()) 
+  		INSERT INTO board (title, content, user_no, regdate, attachment)
+  		VALUES (#{title}, #{content}, #{userNo}, CURDATE(), #{attachment}) 
   	</insert>
   	
   	<select id="select-board" parameterType="String" resultType="Board">

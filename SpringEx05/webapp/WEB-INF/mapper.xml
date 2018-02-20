@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koitt.book.model.Book">
+	<insert id="insert" parameterType="Book">
+		INSERT INTO Book (title, author, publisher, price, description)
+	VALUES (#{title}, #{author}, #{publisher}, #{price}, #{description});
+	</insert>
+	
+	<select id="select" parameterType="String" resultType="Book">
+		SELECT * FROM book WHERE isbn = #{isbn}
+	</select>
+	
+	<select id="select-all" resultType="Book">
+		SELECT * FROM book ORDER BY isbn DESC
+	</select>
+	
+	<select id="select-cnt" resultType="int">
+		SELECT COUNT(*) cnt FROM book
+	</select>
+	
+	<update id="update" parameterType="Book">
+		UPDATE book SET title=#{title}, author=#{author}, publisher=#{publisher}, price=#{price}, 
+		description=#{description} WHERE isbn = #{isbn}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		DELETE FROM book WHERE isbn = #{isbn}
+	</delete>
+</mapper>
+  
+  
+  
+  
+  
+  
+  

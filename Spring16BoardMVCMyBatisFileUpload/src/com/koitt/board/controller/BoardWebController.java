@@ -1,8 +1,11 @@
 package com.koitt.board.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,14 +62,24 @@ public class BoardWebController {
 	public String detail(Model model,
 			@RequestParam(value="no", required=true) String no) {
 		Board board = null;
+		String filename = null;
 		
 		try {
 			board = boardService.detail(no);
+			
+			// URL Encoding 된 파일명을 다시 Decoding해서 포워딩
+			filename = board.getAttachment();
+			if (filename != null && !filename.trim().isEmpty()) {
+				filename = URLDecoder.decode(filename, "UTF-8");
+			}
 		} catch (BoardException e) {
 			model.addAttribute("error", "server");
+		} catch (UnsupportedEncodingException e) {
+			model.addAttribute("error", "encoding");
 		}
 		
 		model.addAttribute("board", board);
+		model.addAttribute("filename", filename);
 		
 		return "board-detail";
 	}
@@ -160,6 +173,25 @@ public class BoardWebController {
 		}
 		
 		return "redirect:board-list.do";
+	}
+	
+	/*
+	 * 다운로드 링크를 화면에서 클릭하면  아래와 같이 서버에 GET 방식으로 요청한다.
+	 * download.do?filename=파일명
+	 * 
+	 * 아래 RequestMethod 애노테이션 뜻은 아래와 같다
+	 * 요청 URL은 /download.do
+	 * 요청HTTP Method는 GET
+	 * 요청한 쿼리 문자열의 변수명이 filename일 경우 아래 메소드를 실행(params)
+	 */
+	@RequestMapping(value="/download.do", method=RequestMethod.GET, params="filename")
+	public void download (HttpServletRequest request, HttpServletResponse response, String filename) {
+		
+		try {
+			fileService.download(request, response, filename);
+		} catch (FileException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }
 

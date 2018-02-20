@@ -59,27 +59,34 @@ public class BoardWebController {
 	
 	// 글 상세 화면
 	@RequestMapping(value="/board-detail.do", method=RequestMethod.GET)
-	public String detail(Model model,
+	public String detail(Model model, HttpServletRequest request,
 			@RequestParam(value="no", required=true) String no) {
 		Board board = null;
 		String filename = null;
+		String imgPath = null;
 		
 		try {
 			board = boardService.detail(no);
 			
 			// URL Encoding 된 파일명을 다시 Decoding해서 포워딩
 			filename = board.getAttachment();
-			if (filename != null && !filename.trim().isEmpty()) {
-				filename = URLDecoder.decode(filename, "UTF-8");
-			}
+			
+			
+			imgPath = fileService.getimgPath(request, filename);
 		} catch (BoardException e) {
+			System.out.println(e.getMessage());
 			model.addAttribute("error", "server");
-		} catch (UnsupportedEncodingException e) {
+		} catch (FileException e) {
+			System.out.println(e.getMessage());
 			model.addAttribute("error", "encoding");
 		}
 		
 		model.addAttribute("board", board);
 		model.addAttribute("filename", filename);
+		if (imgPath != null && !imgPath.trim().isEmpty()) {
+			
+			model.addAttribute("imgPath", imgPath);
+		}
 		
 		return "board-detail";
 	}
@@ -129,12 +136,15 @@ public class BoardWebController {
 	
 	// 글 삭제 후, 글 목록 화면으로 이동
 	@RequestMapping(value="/board-remove.do", method=RequestMethod.POST)
-	public String remove(Model model, String no) {
+	public String remove(Model model, String no, HttpServletRequest request) {
 		try {
-			boardService.remove(no);
+			String toDeleteFilename = boardService.remove(no);
+			fileService.remove(request, toDeleteFilename);
 			
 		} catch (BoardException e) {
 			model.addAttribute("error", "server");
+		} catch (FileException e) {
+			model.addAttribute("error", "file");
 		}
 		
 		return "redirect:board-list.do";
@@ -176,13 +186,13 @@ public class BoardWebController {
 	}
 	
 	/*
-	 * 다운로드 링크를 화면에서 클릭하면  아래와 같이 서버에 GET 방식으로 요청한다.
+	 * 다운로드 링크를 화면에서 클릭하면 아래와 같이 서버에 GET 방식으로 요청한다.
 	 * download.do?filename=파일명
 	 * 
-	 * 아래 RequestMethod 애노테이션 뜻은 아래와 같다
+	 * 아래 RequestMapping 애노테이션 뜻은 아래와 같다.
 	 * 요청 URL은 /download.do
-	 * 요청HTTP Method는 GET
-	 * 요청한 쿼리 문자열의 변수명이 filename일 경우 아래 메소드를 실행(params)
+	 * 요청 HTTP Method는 GET
+	 * 요청한 쿼리문자열의 변수명이 filename일 경우 아래 메소드를 실행 (params)
 	 */
 	@RequestMapping(value="/download.do", method=RequestMethod.GET, params="filename")
 	public void download (HttpServletRequest request, HttpServletResponse response, String filename) {

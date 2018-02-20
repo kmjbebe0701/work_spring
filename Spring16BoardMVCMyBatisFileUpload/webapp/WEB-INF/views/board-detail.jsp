@@ -16,6 +16,9 @@
 			<dt>첨부파일</dt>
 			<dd><a href="download.do?filename=${ board.attachment }">${ filename }</a></dd>
 		</c:if>
+		<c:if test="${ !empty imgPath }">
+			<img src="${ imgPath }" alt="이미지 파일 출력 위치">
+		</c:if>
 	</dl>
 	<a href="board-list.do">글 목록으로 이동</a>
 	<a href="board-modify.do?no=${ board.no }">수정하기</a>

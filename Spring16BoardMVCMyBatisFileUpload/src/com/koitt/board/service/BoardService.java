@@ -23,5 +23,5 @@ public interface BoardService {
 	public void modify(Board board) throws BoardException;
 	
 	// 글 삭제하기
-	public void remove(String no) throws BoardException;
+	public String remove(String no) throws BoardException;
 }

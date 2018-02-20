@@ -45,8 +45,16 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void remove(String no) throws BoardException {
+	public String remove(String no) throws BoardException {
+		//삭제하기전에 삭제할 파일명을 가져온다
+		Board board = dao.select(no);
+		String filename = board.getAttachment();
+		
+		//no 에 해당하는 게시물을 삭제
 		dao.delete(no);
+		
+		//삭제할 파일명을 컨트롤러로 전달
+		return filename;
 	}
 
 }

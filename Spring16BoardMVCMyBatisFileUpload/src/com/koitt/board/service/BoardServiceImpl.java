@@ -40,8 +40,15 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void modify(Board board) throws BoardException {
+	public String modify(Board board) throws BoardException {
+		// 수정 하기 전 첨부 파일 명을 가져온다.
+		Board item = dao.select(board.getNo().toString());
+		String filename = item.getAttachment();
+		
 		dao.update(board);
+		
+		// 기존에 저장되어있던 첨부파일명을 컨트롤러로 전달
+		return filename;
 	}
 
 	@Override

@@ -22,7 +22,7 @@
   	</select>
   	
   	<update id="update-board" parameterType="Board">
-  		UPDATE board SET title = #{title}, content = #{content}, regdate = CURDATE()
+  		UPDATE board SET title = #{title}, content = #{content}, regdate = CURDATE(), attachment = #{attachment}
   		WHERE no = #{no}  
   	</update>
   	

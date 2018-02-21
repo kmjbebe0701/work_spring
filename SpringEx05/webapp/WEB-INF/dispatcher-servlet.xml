@@ -53,5 +53,10 @@
 		<constructor-arg index="0" ref="sqlSessionFactory" />
 	</bean>
 	
+	<!-- MultipartFile 클래스를 사용하기 위한 bean 선언 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+	
 	
 </beans>

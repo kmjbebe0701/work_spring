@@ -11,12 +11,16 @@ public class Book implements Serializable{
 	private String publisher;    // 출판사
 	private Integer price;        // 가격
 	private String description;    // 책 설명
+	private String attachment;		//첨부 파일명
 	
 	
 	public Book() {
 	}
 
-	public Book(Integer isbn, String title, String author, String publisher, Integer price, String description) {
+
+
+	public Book(Integer isbn, String title, String author, String publisher, Integer price, String description,
+			String attachment) {
 		super();
 		this.isbn = isbn;
 		this.title = title;
@@ -24,6 +28,7 @@ public class Book implements Serializable{
 		this.publisher = publisher;
 		this.price = price;
 		this.description = description;
+		this.attachment = attachment;
 	}
 
 
@@ -32,49 +37,91 @@ public class Book implements Serializable{
 		return isbn;
 	}
 
+
+
 	public void setIsbn(Integer isbn) {
 		this.isbn = isbn;
 	}
+
+
 
 	public String getTitle() {
 		return title;
 	}
 
+
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+
 
 	public String getAuthor() {
 		return author;
 	}
 
+
+
 	public void setAuthor(String author) {
 		this.author = author;
 	}
+
+
 
 	public String getPublisher() {
 		return publisher;
 	}
 
+
+
 	public void setPublisher(String publisher) {
 		this.publisher = publisher;
 	}
 
-	public int getPrice() {
+
+
+	public Integer getPrice() {
 		return price;
 	}
+
+
 
 	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
+
+
 	public String getDescription() {
 		return description;
 	}
 
+
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+
+
+	public String getAttachment() {
+		return attachment;
+	}
+
+
+
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
+	}
+
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
 
 	@Override
 	public String toString() {
@@ -91,14 +138,19 @@ public class Book implements Serializable{
 		builder.append(price);
 		builder.append(", description=");
 		builder.append(description);
+		builder.append(", attachment=");
+		builder.append(attachment);
 		builder.append("]");
 		return builder.toString();
 	}
+
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((attachment == null) ? 0 : attachment.hashCode());
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((isbn == null) ? 0 : isbn.hashCode());
@@ -107,6 +159,10 @@ public class Book implements Serializable{
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
+
+
+
+
 
 	@Override
 	public boolean equals(Object obj) {

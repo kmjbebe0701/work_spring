@@ -43,16 +43,24 @@ public class BookServiceImpl implements BookService{
 	}
 
 	@Override
-	public void remove(String isbn) throws BookException {
+	public String remove(String isbn) throws BookException {
+		
+		Book book = dao.select(isbn);
+		String filename = book.getAttachment();
 		
 		dao.delete(isbn);
+		return filename;
 		
 	}
 
 	@Override
-	public void modify(Book book) throws BookException {
+	public String modify(Book book) throws BookException {
 		
+		Book item = dao.select(book.getIsbn().toString());
+		String filename = item.getAttachment();
 		dao.update(book);
+		
+		return filename;
 		
 	}
 

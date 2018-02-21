@@ -26,6 +26,7 @@ public class BookDaoImpl implements BookDao{
 			book = session.selectOne(MAPPER_NS + ".select", isbn);
 			
 		}catch(Exception e){
+			System.out.println(e.getMessage());
 			throw new BookException(e.getMessage());
 		}
 		
@@ -39,6 +40,7 @@ public class BookDaoImpl implements BookDao{
 			list = session.selectList(MAPPER_NS + ".select-all");
 			
 		}catch(Exception e){
+			System.out.println(e.getMessage());
 			throw new BookException(e.getMessage());
 		}
 		
@@ -54,6 +56,7 @@ public class BookDaoImpl implements BookDao{
 			
 			
 		}catch(Exception e){
+			System.out.println(e.getMessage());
 			throw new BookException(e.getMessage());
 		}
 		return result;
@@ -65,6 +68,7 @@ public class BookDaoImpl implements BookDao{
 			session.insert(MAPPER_NS + ".insert", book);
 			
 		}catch(Exception e){
+			System.out.println(e.getMessage());
 			throw new BookException(e.getMessage());
 		}
 		
@@ -76,6 +80,7 @@ public class BookDaoImpl implements BookDao{
 			session.delete(MAPPER_NS + ".delete", isbn);
 			
 		}catch(Exception e){
+			System.out.println(e.getMessage());
 			throw new BookException(e.getMessage());
 		}
 		
@@ -87,6 +92,7 @@ public class BookDaoImpl implements BookDao{
 			session.update(MAPPER_NS + ".update", book);
 			
 		}catch(Exception e){
+			System.out.println(e.getMessage());
 			throw new BookException(e.getMessage());
 		}
 		

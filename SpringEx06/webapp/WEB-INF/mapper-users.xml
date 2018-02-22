@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koitt.book.model.Users">
+	<insert id="insert" parameterType="Users">
+	INSERT INTO users (email, password, name, attachment)
+	VALUES (#{email}, #{password}, #{name}, #{attachment});
+	</insert>
+	
+	<select id="select" parameterType="String" resultType="Users">
+		SELECT * FROM users WHERE no = #{no}
+	</select>
+	
+	<select id="select-all" resultType="Users">
+		SELECT * FROM users ORDER BY no DESC
+	</select>
+	
+	<select id="select-cnt" resultType="int">
+		SELECT COUNT(*) no FROM users
+	</select>
+	
+	<update id="update" parameterType="Users">
+		UPDATE users SET email=#{email}, password=#{password}, name=#{name}, attachment=#{attachment} WHERE no = #{no}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		DELETE FROM users WHERE no = #{no}
+	</delete>
+</mapper>
+  
+  
+  
+  
+  
+  
+  

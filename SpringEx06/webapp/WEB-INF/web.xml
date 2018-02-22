@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+
+	<!--
+		 Root Application Context
+		 아래와 같이 작성하면 applicationContext.xml 에 설정한 스프링 설정은
+		 애플리케이션 단위에 포함된 영역에 모두 설정되는 것이다.
+		 
+		 dispatcher-servlet.xml 스프링 설정은 해당 servlet영역에만 설정값이 적용된다.
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+	<!-- applicationContext.xml에서 생성한 빈을 다른 서블릿에서 사용하기 위해서는 ContextLoaderListener가 필요하다 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	
+	<!-- 스프링은 기본으로 servlet-name 앨리먼트의 이름을 가진 *-servlet.xml 파일을 WEB-INF 폴더에서 
+		찾는다 예) servlet-name: dispatcher 스프링 설정 위치: WEB-INF/dispatcher-servlet.xml -->
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	</servlet>
+
+	<!-- URL 입력시 맨 뒤에 .do라고 입력하면 DispatcherServlet을 사용하겠다는 뜻 -->
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>characterEncodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>characterEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>

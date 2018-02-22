@@ -13,12 +13,36 @@
   		VALUES (#{email}, #{password}, #{name}, #{attachment}) 
   	</insert>
   	
-  	<select id="select-users" parameterType="int" resultType="Users">
-  		SELECT * FROM users WHERE no = #{no}
+  	<resultMap type="Users" id="UsersResultMap">
+  		<id property="no" column="no"/>
+  		<result property="email" column="email"/>
+  		<result property="password" column="password"/>
+  		<result property="name" column="name"/>
+  		<result property="attachment" column="attchment"/>
+  		<collection property="authorities" ofType="Authority">
+  			<id property="id" column="id"/>
+  			<result property="name" column="aname"/>
+  		</collection>
+  	</resultMap>
+  	
+  	<select id="select-users" parameterType="int" resultMap="UsersResultMap">
+	SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+	FROM users u,
+		(SELECT users_authority.users_no, authority.id, authority.name
+		FROM users_authority, authority
+		WHERE users_authority.authority_id = authority.id) ua
+	WHERE u.no = ua.users_no AND u.no = #{no}
+
   	</select>
   	
-  	<select id="select-users-by-email" parameterType="String" resultType="Users">
-  		SELECT * FROM users WHERE email = #{email}
+  	<select id="select-users-by-email" parameterType="String" resultMap="UsersResultMap">
+  		SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+	FROM users u,
+		(SELECT users_authority.users_no, authority.id, authority.name
+		FROM users_authority, authority
+		WHERE users_authority.authority_id = authority.id) ua
+	WHERE u.no = ua.users_no AND u.email = #{email}
+
   	</select>
   	
   	<select id="select-count-users" resultType="int">

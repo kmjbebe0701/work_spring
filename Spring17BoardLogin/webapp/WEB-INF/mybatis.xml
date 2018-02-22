@@ -12,5 +12,6 @@
   	<typeAliases>
   		<typeAlias type="com.koitt.board.model.Board" alias="Board"/>
   		<typeAlias type="com.koitt.board.model.Users" alias="Users"/>
+  		<typeAlias type="com.koitt.board.model.Authority" alias="Authority"/>
   	</typeAliases>
   </configuration>

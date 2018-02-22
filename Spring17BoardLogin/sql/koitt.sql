@@ -81,4 +81,24 @@ SELECT * FROM users;
 SELECT * FROM users_authority;
 SELECT * FROM authority;
 
+# 1. users_authority 테이블과 authority 테이블을 EQUI JOIN하는 SQL문
+SELECT users_authority.users_no, authority.id, authority.name
+FROM users_authority, authority
+WHERE users_authority.authority_id=authority.id;
+
+#2. 1번에서 조인한 결과 테이블과 users 테이블을 EQUL JOIN 하는 SQL문
+SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+FROM users u,
+	(SELECT users_authority.users_no, authority.id, authority.name
+	FROM users_authority, authority
+	WHERE users_authority.authority_id=authority.id) ua
+WHERE u.no = ua.users_no;
+
+# 3. 2번 결과에서 한 사용자에 대한 정보만 가져오는 SQL문 (2번 + AND u.no = #{no})
+SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+FROM users u,
+	(SELECT users_authority.users_no, authority.id, authority.name
+	FROM users_authority, authority
+	WHERE users_authority.authority_id=authority.id) ua
+WHERE u.no = ua.users_no AND u.no = 3;
 

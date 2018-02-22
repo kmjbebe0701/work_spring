@@ -13,8 +13,12 @@
   		VALUES (#{email}, #{password}, #{name}, #{attachment}) 
   	</insert>
   	
-  	<select id="select-users" parameterType="String" resultType="Users">
+  	<select id="select-users" parameterType="int" resultType="Users">
   		SELECT * FROM users WHERE no = #{no}
+  	</select>
+  	
+  	<select id="select-users-by-email" parameterType="String" resultType="Users">
+  		SELECT * FROM users WHERE email = #{email}
   	</select>
   	
   	<select id="select-count-users" resultType="int">

@@ -60,6 +60,21 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
+	<!-- 
+		Spring Security Filter Chain 
+		클라이언트로부터 전달받는 모든 요청과 클라이언트로 전달하는 모든 응답에 대해 스프링 시큐리티를 적용하기 위해 필터 적용
+		(이전에 Servlet/JSP 시간에 로그인 필터를 직접만드는 것을 대신하여 스프링에서 이미 구현한 필터를 사용하는 것이다)
+	-->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 </web-app>
 
 

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,6 +63,8 @@ public class UsersWebController {
 			String name,
 			@RequestParam("attachment") MultipartFile attachment) {
 		
+	
+		
 		// 클라이언트로부터 전달받은 값으로 객체 생성
 		Users users = new Users(null, email, password, name, null);
 		
@@ -91,7 +94,7 @@ public class UsersWebController {
 		}
 		
 		// 가입 시 문제가 발생하면 index.html로 이동
-		return "redirect:index.html";
+		return "redirect:index.do";
 	}
 	
 	// 가입 확인 페이지

@@ -8,7 +8,8 @@
 	<h1>글 상세 보기</h1>
 	<dl>
 		<dt>번호</dt><dd>${ board.no }</dd>
-		<dt>작성자 번호</dt><dd>${ board.userNo }</dd>
+		<dt>작성자</dt><dd>${ board.users.name } (${ board.users.email })</dd>
+		<dt>작성자 파일</dt><dd><img src="${ uploadPath }/${ board.users.attachment }" alt="작성자 파일 출력 위치"></dd>
 		<dt>작성일</dt><dd>${ board.regdate }</dd>
 		<dt>제목</dt><dd>${ board.title }</dd>
 		<dt>내용</dt><dd>${ board.content }</dd>

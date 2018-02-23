@@ -9,12 +9,31 @@
   		VALUES (#{title}, #{content}, #{userNo}, CURDATE(), #{attachment}) 
   	</insert>
   	
-  	<select id="select-board" parameterType="String" resultType="Board">
-  		SELECT * FROM board WHERE no = #{no}
+  	<resultMap type="Board" id="boardREsultMap">
+  		<id property="no" column="no"/>
+  		<result property="title" column="title"/>
+  		<result property="content" column="content"/>
+  		<result property="userNo" column="userNo"/>
+  		<result property="regdate" column="regdate"/>
+  		<result property="attachment" column="attachment"/>
+  		<result property="users.email" column="email"/>
+  		<result property="users.name" column="name"/>
+  		<result property="users.attachment" column="uattachment"/>
+  		
+  	</resultMap>
+  	
+  	<select id="select-board" parameterType="String" resultMap="boardREsultMap">
+  		SELECT b.no, b.title, b.content, b.user_no, b.regdate, b.attachment, 
+		u.email, u.name, u.attachment as "uattachment"
+		FROM board b, users u
+		WHERE b.user_no = u.no AND b.no = #{no} ORDER BY b.no DESC 
   	</select>
   	
-  	<select id="select-all-board" resultType="Board">
-  		SELECT * FROM board ORDER BY no DESC
+  	<select id="select-all-board" resultMap="boardREsultMap">
+  		SELECT b.no, b.title, b.content, b.user_no, b.regdate, b.attachment, 
+		u.email, u.name, u.attachment as "uattachment"
+		FROM board b, users u
+		WHERE b.user_no = u.no ORDER BY b.no DESC
   	</select>
   	
   	<select id="select-count-board" resultType="int">

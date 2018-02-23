@@ -18,8 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.koitt.board.model.Board;
 import com.koitt.board.model.BoardException;
 import com.koitt.board.model.FileException;
+import com.koitt.board.model.Users;
+import com.koitt.board.model.UsersException;
 import com.koitt.board.service.BoardService;
 import com.koitt.board.service.FileService;
+import com.koitt.board.service.UsersService;
 
 @Controller
 @RequestMapping("/board")		//하위의 RequestMapping 의 value 앞에 공통으로 /board 추가됨
@@ -27,6 +30,9 @@ public class BoardWebController {
 
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private UsersService usersService;
 
 	@Autowired
 	private FileService fileService;
@@ -63,6 +69,7 @@ public class BoardWebController {
 		Board board = null;
 		String filename = null;
 		String imgPath = null;
+		String uploadPath = null;
 
 		try {
 			board = boardService.detail(no);
@@ -74,6 +81,8 @@ public class BoardWebController {
 			}
 			
 			imgPath = fileService.getimgPath(request, filename);
+			uploadPath = fileService.getUploadPath(request);
+			
 
 		} catch (BoardException e) {
 			System.out.println(e.getMessage());
@@ -88,14 +97,36 @@ public class BoardWebController {
 		if (imgPath != null && !imgPath.trim().isEmpty()) {
 
 			model.addAttribute("imgPath", imgPath);
+			
 		}
+		model.addAttribute("uploadPath", uploadPath);
 
 		return "board-detail";
 	}
 
 	// 글 작성 화면
 	@RequestMapping(value = "/board-add.do", method = RequestMethod.GET)
-	public String add() {
+	public String add(Model model) {
+		// 현재 로그인한 사용자의 email 값을 가져온다
+		String email = usersService.getPrincipal().getUsername();
+		
+		try {
+			// 가져온 이메일 값을 이용하여 사용자 정보를 불러온다.
+			Users users = usersService.detailByEmail(email);
+			
+			// 비밀번호를 클라이언트에 제공하지 않기위해 null값 설정
+			users.setPassword(null);
+			
+			// 비밀번호를 제외한 사용자 정보를 클라이언트에 전달한다
+			model.addAttribute("users", users);
+			
+			
+		} catch (UsersException e) {
+			System.out.println(e.getMessage());
+			model.addAttribute("error", "server");	
+		}
+			
+				
 		return "board-add";
 	}
 
@@ -108,6 +139,8 @@ public class BoardWebController {
 		board.setUserNo(userNo);
 		board.setTitle(title);
 		board.setContent(content);
+		
+		
 
 		try {
 			// 파일 서비스로부터 전달받은 파일명을 VO 객체에 담는다

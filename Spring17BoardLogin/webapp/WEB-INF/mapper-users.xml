@@ -45,6 +45,10 @@
 
   	</select>
   	
+  	<select id="select-last-insert-id" resultType="int">
+  		SELECT LAST_INSERT_ID()
+  	</select>
+  	
   	<select id="select-count-users" resultType="int">
   		SELECT COUNT(*) cnt FROM users
   	</select>
@@ -57,6 +61,14 @@
   	<delete id="delete-users" parameterType="String">
   		DELETE FROM users WHERE no = #{no}
   	</delete>
+  	
+  	<!-- 권한이 여러가지 일 경우 반복문을 통해 INSERT를 해줘야한다. -->
+  	<insert id="insert-authority" parameterType="Users">
+  		INSERT INTO users_authority(users_no, authority_id) VALUE 
+  		<foreach collection="authorities" item="item" separator=", ">
+  			(#{no}, #{item.id})
+  		</foreach>
+  	</insert>
   	
   </mapper>
   

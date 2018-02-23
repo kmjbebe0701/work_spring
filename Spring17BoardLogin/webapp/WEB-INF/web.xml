@@ -16,9 +16,6 @@
 		<param-value>/WEB-INF/applicationContext.xml</param-value>
 	</context-param>
 	
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
 	
 	<!-- applicationContext.xml에서 생성한 빈을 다른 서블릿에서 사용하기 위해서는 ContextLoaderListener가 필요하다 -->
 	<listener>
@@ -43,7 +40,7 @@
 	 -->
 	<servlet-mapping>
 		<servlet-name>dispatcher</servlet-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
 	<filter>

@@ -42,7 +42,7 @@
 		<sec:intercept-url pattern="/board/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')"/>
 		<sec:form-login login-page="/login.do" 
 					login-processing-url="/login-processing"
-					authentication-failure-forward-url="/login.do?error=login"
+					authentication-failure-url="/login.do?error=login"
 					username-parameter="email"
 					password-parameter="password" />
 					

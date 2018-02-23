@@ -1,4 +1,4 @@
-package com.koitt.board.controller;
+package com.koitt.board.dao;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;

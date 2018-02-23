@@ -1,4 +1,4 @@
-package com.koitt.board.controller;
+package com.koitt.board.dao;
 
 import com.koitt.board.model.Authority;
 import com.koitt.board.model.UsersException;

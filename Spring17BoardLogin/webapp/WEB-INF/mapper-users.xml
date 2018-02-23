@@ -18,7 +18,7 @@
   		<result property="email" column="email"/>
   		<result property="password" column="password"/>
   		<result property="name" column="name"/>
-  		<result property="attachment" column="attchment"/>
+  		<result property="attachment" column="attachment"/>
   		<collection property="authorities" ofType="Authority">
   			<id property="id" column="id"/>
   			<result property="name" column="aname"/>
@@ -36,7 +36,7 @@
   	</select>
   	
   	<select id="select-users-by-email" parameterType="String" resultMap="UsersResultMap">
-  		SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+  	SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
 	FROM users u,
 		(SELECT users_authority.users_no, authority.id, authority.name
 		FROM users_authority, authority

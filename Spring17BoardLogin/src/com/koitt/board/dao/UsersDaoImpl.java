@@ -82,7 +82,7 @@ public class UsersDaoImpl implements UsersDao{
 		}catch (Exception e) {
 			throw new UsersException(e.getMessage());
 		}
-		return null;
+		return users;
 	}
 
 }

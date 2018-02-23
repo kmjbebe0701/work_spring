@@ -168,6 +168,7 @@ public class FileServiceImpl implements FileService {
 		// context경로 가져오기 (localhost:8080/Spring16BoardMVCMyBatisFileUpload)
 		String contextPath = request.getContextPath();
 
+		System.out.println(contextPath);
 		// 파일의 확장자 추출
 
 		if (filename != null && !filename.trim().isEmpty()) {

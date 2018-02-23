@@ -5,7 +5,7 @@
 <head><title>게시판 목록</title></head>
 <body>
 	<h1>게시판 목록</h1>
-	<a href="board-add.do">글쓰기</a>
+	<a href="<c:url value='/board/board-add.do'/> ">글쓰기</a>
 	<table>
 		<thead>
 			<tr>
@@ -19,7 +19,7 @@
 			<c:forEach items="${ list }" var="board">
 				<tr>
 					<td>${ board.no }</td>
-					<td><a href="board-detail.do?no=${ board.no }">${ board.title }</a></td>
+					<td><a href="<c:url value='/board/board-detail.do?no=${ board.no }'/> ">${ board.title }</a></td>
 					<td>${ board.userNo }</td>
 					<td>${ board.regdate }</td>
 				</tr>

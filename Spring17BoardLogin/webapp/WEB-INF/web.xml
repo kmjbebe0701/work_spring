@@ -57,6 +57,20 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
+	
+	
+	<!-- Spring Multipart Filter -->
+    <filter>
+        <filter-name>springMultipartFilter</filter-name>
+        <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springMultipartFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+	
+	
 	<!-- 
 		Spring Security Filter Chain 
 		클라이언트로부터 전달받는 모든 요청과 클라이언트로 전달하는 모든 응답에 대해 스프링 시큐리티를 적용하기 위해 필터 적용

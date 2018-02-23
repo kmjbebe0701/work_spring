@@ -15,7 +15,7 @@ public class IndexWebController {
 	@Autowired
 	private UsersService service;
 	
-	@RequestMapping(value="/", method=RequestMethod.GET)
+	@RequestMapping(value= {"/", "/index.do"}, method=RequestMethod.GET)
 	public String index(Model model) {
 		
 		// UsersService 의 principal 객체를 가져와서 사용자 이메일 값을 가져온다

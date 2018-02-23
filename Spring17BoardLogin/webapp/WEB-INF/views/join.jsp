@@ -18,6 +18,7 @@
 			<label>첨부파일 <input type="file" name="attachment"></label>
 
 		<input type="submit" value="회원가입">
+		<input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }">
 	</form>
 </body>
 </html>

@@ -1,10 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head><title>게시물 작성</title></head>
 <body>
 	<h1>게시물 작성</h1>
-	<form action="board-add.do" method="post" enctype="multipart/form-data">
+	<form action="<c:url value='/board/board-add.do'/>" method="post" enctype="multipart/form-data">
 		<div>
 			<label>작성자 번호<input type="text" name="userNo"></label>
 		</div>
@@ -20,7 +21,8 @@
 		</div>
 		<input type="submit" value="글 작성">
 		<input type="reset" value="입력한 내용 지우기">
-		<a href="board-list.do">글 목록으로 이동</a>
+		<a href="<c:url value='/board/board-list.do'/> ">글 목록으로 이동</a>
+		<input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }">
 	</form>
 </body>
 </html>

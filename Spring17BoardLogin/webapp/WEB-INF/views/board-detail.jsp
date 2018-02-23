@@ -14,14 +14,14 @@
 		<dt>내용</dt><dd>${ board.content }</dd>
 		<c:if test="${ !empty filename }">
 			<dt>첨부파일</dt>
-			<dd><a href="download.do?filename=${ board.attachment }">${ filename }</a></dd>
+			<dd><a href="<c:url value='/download.do?filename=${ board.attachment }'/> ">${ filename }</a></dd>
 		</c:if>
 		<c:if test="${ !empty imgPath }">
 			<img src="${ imgPath }" alt="이미지 파일 출력 위치">
 		</c:if>
 	</dl>
-	<a href="board-list.do">글 목록으로 이동</a>
-	<a href="board-modify.do?no=${ board.no }">수정하기</a>
-	<a href="board-remove.do?no=${ board.no }">삭제하기</a>
+	<a href="<c:url value='/board/board-list.do'/> ">글 목록으로 이동</a>
+	<a href="<c:url value='/board/board-modify.do?no=${ board.no }'/> ">수정하기</a>
+	<a href="<c:url value='/board/board-remove.do?no=${ board.no }'/> ">삭제하기</a>
 </body>
 </html>

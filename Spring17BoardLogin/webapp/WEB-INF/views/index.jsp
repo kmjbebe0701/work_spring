@@ -7,7 +7,7 @@
 </head>
 <body>
 	<h1>홈페이지</h1>
-	<a href="board-list.do">글 목록으로 이동</a>
+	<a href="<c:url value='/board/board-list.do'/> ">글 목록으로 이동</a>
 	<a href="admin/users-list.do">사용자 목록으로 이동</a>
 	
 	<c:if test="${ isLogin == 'false' }">

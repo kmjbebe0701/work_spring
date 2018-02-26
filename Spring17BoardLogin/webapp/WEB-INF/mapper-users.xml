@@ -54,7 +54,7 @@
   	</select>
   	
   	<update id="update-users" parameterType="Users">
-  		UPDATE users SET password = #{password}, name = #{name} attachment = #{attachment}
+  		UPDATE users SET password = #{password}, name = #{name}, attachment = #{attachment}
   		WHERE no = #{no}  
   	</update>
   	

@@ -149,7 +149,7 @@ public class UsersWebController {
 		return "users-modify";
 	}
 
-	@RequestMapping(value = "/users-modify.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/users-modify.do", method = RequestMethod.POST)
 	public String modify(HttpServletRequest request, String oldPassword, String newPassword, String name,
 			@RequestParam("attachment") MultipartFile attachment) {
 

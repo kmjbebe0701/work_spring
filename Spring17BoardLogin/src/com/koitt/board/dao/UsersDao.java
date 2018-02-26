@@ -26,6 +26,6 @@ public interface UsersDao {
 	public void insertAuthority(Users users) throws UsersException;
 	
 	// 최근 등록한 사용자의 번호 가져오기
-	public Integer selextLastInsertId() throws UsersException;
+	public Integer selectLastInsertId() throws UsersException;
 
 }

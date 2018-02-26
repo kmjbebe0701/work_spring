@@ -1,6 +1,7 @@
 package com.koitt.board.dao;
 
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.koitt.board.model.Authority;
@@ -11,6 +12,7 @@ public class AuthorityDaoImpl implements AuthorityDao{
 	
 	private static final String MAPPER_NS = Authority.class.getName();
 	
+	@Autowired
 	private SqlSession session;
 	
 	public AuthorityDaoImpl() {}

@@ -68,7 +68,11 @@ public class UsersDaoImpl implements UsersDao{
 
 	@Override
 	public void update(Users users) throws UsersException{
-		// TODO Auto-generated method stub
+		try {
+			session.update(MAPPER_NS + ".update-users", users);
+		}catch (Exception e) {
+			throw new UsersException(e.getMessage());
+		}
 		
 	}
 
@@ -96,7 +100,7 @@ public class UsersDaoImpl implements UsersDao{
 	}
 
 	@Override
-	public Integer selextLastInsertId() throws UsersException {
+	public Integer selectLastInsertId() throws UsersException {
 		Integer lastInsertId = null;
 		
 		try {

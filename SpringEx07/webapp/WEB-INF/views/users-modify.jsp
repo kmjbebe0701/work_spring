@@ -16,7 +16,7 @@
 		
 		<input type="submit" value="회원정보수정">
 		<input type="reset" value="입력한 내용 지우기">
-		<a href="<c:url value='/book/book-list.do.'/> ">글 목록으로 이동</a>
+		<a href="<c:url value='/book/book-list.do'/> ">글 목록으로 이동</a>
 		<input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }">
 	</form>
 	<c:if test="${ param.error == 'password' }">

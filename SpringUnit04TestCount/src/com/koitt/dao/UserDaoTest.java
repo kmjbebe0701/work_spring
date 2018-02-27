@@ -84,4 +84,8 @@ public class UserDaoTest {
 		assertThat(dao.getCount(), is(3));
 		
 	}
+	/*
+	 *  주의할 점: 두개의 테스트가 어떤 순서로 실행될지는 알 수 없다.
+	 *  모든 테스트는 실행 순서에 상관없이 독립적으로 항상 동일한 결과를 낼 수 있도록 한다.
+	 */
 }

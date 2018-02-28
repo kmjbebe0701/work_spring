@@ -66,12 +66,6 @@ public class UsersServiceImpl implements UsersService {
 		// users 테이블에 사용자 정보 입력
 		usersDao.insert(users);
 
-		// 방금 등록한 users의 사용자 번호를 가져온다
-		Integer no = usersDao.selectLastInsertId();
-
-		// 가져온 사용자의 번호를 users 객체에 담는다
-		users.setNo(no);
-
 		// users_authority 테이블에 사용자 권한 정보 입력
 		usersDao.insertAuthority(users);
 	}

@@ -115,11 +115,8 @@ public class JUnitTest {
 		
 		// 사용자 3명 입력이 정상적으로 완료됐는지 확인 테스트
 		usersDao.insert(users1);
-		users1.setNo(usersDao.selectLastInsertId());
 		usersDao.insert(users2);
-		users2.setNo(usersDao.selectLastInsertId());
 		usersDao.insert(users3);
-		users3.setNo(usersDao.selectLastInsertId());
 		assertThat(usersDao.getCount(), is(3));
 		
 		// 사용자 3명의 권한 정보를 입력하고 정상적으로 완료됐는지 확인 테스트
@@ -163,17 +160,15 @@ public class JUnitTest {
 		
 		// 2. 글 작성할 사용자 1명 추가하기
 		usersDao.insert(users1);
-		Integer userNo = usersDao.selectLastInsertId();		// 추가한 사용자의 번호 가져오기
 		assertThat(usersDao.getCount(), is(1));
 		
 		// 3. 글작성
-		board1.setUserNo(userNo);
+		board1.setUserNo(users1.getNo());
 		boardDao.insert(board1);
-		Integer boardNo = boardDao.selectLastInsertId();
 		assertThat(boardDao.getCount(), is(1));
 		
 		// 4. 글 내용 비교 테스트
-		Board boardget1 = boardDao.select(boardNo.toString());
+		Board boardget1 = boardDao.select(board1.getNo().toString());
 		assertThat(boardget1.getTitle(), is(board1.getTitle()));
 		assertThat(boardget1.getContent(), is(board1.getContent()));
 		

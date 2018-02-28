@@ -29,11 +29,6 @@ public class BookServiceImpl implements BookService{
 		return dao.selectAll();
 	}
 
-	@Override
-	public int count() throws BookException {
-		
-		return dao.bookCount();
-	}
 
 	@Override
 	public void add(Book book) throws BookException {

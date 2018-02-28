@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koitt.book.model.Book">
+	<insert id="insert" parameterType="Book">
+	INSERT INTO Book (title, author, publisher, price, description, user_no, attachment)
+	VALUES (#{title}, #{author}, #{publisher}, #{price}, #{description}, #{userNo}, #{attachment});
+	</insert>
+	
+	 <resultMap type="Book" id="bookREsultMap">
+  		<id property="isbn" column="isbn"/>
+  		<result property="title" column="title"/>
+  		<result property="author" column="author"/>
+  		<result property="publisher" column="publisher"/>
+  		<result property="price" column="price"/>
+  		<result property="description" column="description"/>
+  		<result property="userNo" column="userNo"/>
+  		<result property="attachment" column="attachment"/>
+  		<result property="users.email" column="email"/>
+  		<result property="users.name" column="name"/>
+  		<result property="users.attachment" column="uattachment"/>
+  		
+  	</resultMap>
+  	
+	<select id="select" parameterType="String" resultMap="bookREsultMap">
+		SELECT b.isbn, b.title, b.author, b.publisher, b.price, b.description, b.user_no, b.attachment, 
+		u.email, u.name, u.attachment as "uattachment"
+		FROM book b, users u
+		WHERE b.user_no = u.no AND b.isbn = #{isbn}  ORDER BY b.isbn DESC;
+	</select>
+	
+	<select id="select-all" resultMap="bookREsultMap">
+		SELECT b.isbn, b.title, b.author, b.publisher, b.price, b.description, b.user_no, b.attachment, 
+		u.email, u.name, u.attachment as "uattachment"
+		FROM book b, users u
+		WHERE b.user_no = u.no ORDER BY b.isbn DESC;
+	</select>
+	
+	
+	<update id="update" parameterType="Book">
+		UPDATE book SET title=#{title}, author=#{author}, publisher=#{publisher}, price=#{price}, 
+		description=#{description}, attachment=#{attachment} WHERE isbn = #{isbn}
+	</update>
+	
+	<delete id="delete" parameterType="String">
+		DELETE FROM book WHERE isbn = #{isbn}
+	</delete>
+  	
+  	<delete id="delete-all">
+  		DELETE FROM book
+  	</delete>
+  	
+  	<select id="count-book" resultType="int">
+  		SELECT COUNT(*) FROM book
+  	</select>
+  	
+  	<select id="select-last-insert-id" resultType="int">
+  		SELECT LAST_INSERT_ID()
+  	</select>
+</mapper>
+  
+  
+  
+  
+  
+  
+  

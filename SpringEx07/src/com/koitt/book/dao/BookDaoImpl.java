@@ -48,19 +48,6 @@ public class BookDaoImpl implements BookDao{
 		return list;
 	}
 
-	@Override
-	public int bookCount() throws BookException {
-		Integer result = null;
-		try {
-			result = session.selectOne(MAPPER_NS + ".select-cnt");
-			
-			
-		}catch(Exception e){
-			System.out.println(e.getMessage());
-			throw new BookException(e.getMessage());
-		}
-		return result;
-	}
 
 	@Override
 	public void insert(Book book) throws BookException {
@@ -96,6 +83,46 @@ public class BookDaoImpl implements BookDao{
 			throw new BookException(e.getMessage());
 		}
 		
+	}
+
+	@Override
+	public void deleteAll() throws BookException {
+		try {
+			session.delete(MAPPER_NS + ".delete-all");
+			
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+			throw new BookException(e.getMessage());
+		}
+		
+	}
+
+	@Override
+	public Integer getCount() throws BookException {
+		Integer count = null;
+		try {
+			count = session.selectOne(MAPPER_NS + ".count-book");
+			
+			
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+			throw new BookException(e.getMessage());
+		}
+		return count;
+	}
+
+	@Override
+	public Integer selectLastInsertId() throws BookException {
+		Integer lastInsertId = null;
+		try {
+			lastInsertId = session.selectOne(MAPPER_NS + ".select-last-insert-id");
+			
+			
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+			throw new BookException(e.getMessage());
+		}
+		return lastInsertId;
 	}
 
 }

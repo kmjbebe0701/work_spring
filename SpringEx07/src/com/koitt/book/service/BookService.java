@@ -13,8 +13,6 @@ public interface BookService {
 	// 책 목록
 	public List<Book> list() throws BookException;
 	
-	// 책 개수 가져오기
-	public int count() throws BookException;
 	
 	// 책 추가
 	public void add(Book book) throws BookException;

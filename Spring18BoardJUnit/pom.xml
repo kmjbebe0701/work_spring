@@ -146,5 +146,20 @@
             <version>4.3.14.RELEASE</version>
             <scope>test</scope>
         </dependency>
+        
+       <!-- Hibernate Validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.7.Final</version>
+		</dependency>
+		
+		
+        <!-- JSTL -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
 	</dependencies>
 </project>

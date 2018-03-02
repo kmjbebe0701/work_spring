@@ -1,9 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
-<head><title>회원 가입 환영 페이지</title></head>
+<head><title><spring:message code="joinCon" /></title></head>
 <body>
-	<h1>${ name }님 회원가입을 환영합니다.</h1>
-	<a href="index.do">홈으로</a>
+	<h1>${ name }<spring:message code="joinCon" /></h1>
+	<a href="index.do"><spring:message code="index" /></a>
 </body>
 </html>

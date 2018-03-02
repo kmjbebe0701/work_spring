@@ -1,12 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
-<head><title>접근 제한 페이지</title></head>
+<head><title><spring:message code="limit" /></title></head>
 <body>
-	<h1>접근 제한 페이지</h1>
+	<h1><spring:message code="limit" /></h1>
 	<div>
-		<span>${ email }님은 접근할 수 없는 페이지 입니다.</span>
+		<span>[${ email }]<spring:message code="limit_p" /></span>
 	</div>
 </body>
 </html>

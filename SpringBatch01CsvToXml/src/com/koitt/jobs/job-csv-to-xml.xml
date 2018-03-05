@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!--
+		ItemReader(FlatFileItemReader): csv 파일 읽기
+		ItemProcessor(CustomItemProcessor): 데이터 가공/처리
+		ItemWriter(StaxEventItemWriter): xml 파일로 쓰기
+		
+		ItemReader, ItemWriter는 스프링에서 이미 구현한 클래스를 사용
+		ItemProcessor는 우리가 작성한 클래스를 사용 
+	 -->
+	 
+	 <!--
+	 	Report(VO 클래스) 빈 생성: JobInstance마다 독립적인 Report 객체를 생성하기 위해
+	 	scope 속성 값을 prototype으로 설정한다.
+	 -->
+	 <bean id="report" class="com.koitt.model.Report" scope="prototype" />
+	 
+	 <!-- JobParameters 객체를 전달받아 객체 내에 있는 값을 이용하여 입력파일 객체 생성 -->
+	 <bean id="inputFile" class="org.springframework.core.io.FileSystemResource" scope="step">
+	 	<constructor-arg value="#{jobParameters[inputFile]}" />
+	 </bean>
+	 
+	 <!-- JobParameters 객체를 전달받아 객체 내에 있는 값을 이용하여 출력파일 객체 생성 -->
+	 <bean id="outputFile" class="org.springframework.core.io.FileSystemResource" scope="step">
+	 	<constructor-arg value="#{jobParameters[outputFile]}" />
+	 </bean>
+	 
+	 <!-- ItemReader 빈 생성 -->
+	 <bean id="csvFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+	 	<property name="resource" ref="inputFile" />
+	 	<property name="lineMapper">
+	 		<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+	 			<property name="lineTokenizer">
+	 				<bean 
+	 					class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+	 					<property name="names" value="id, sales, qty, staffName, date" />
+	 					<property name="delimiter" value="," />
+	 				</bean>
+	 			</property>
+	 			<property name="fieldSetMapper">
+	 				<bean class="com.koitt.model.ReportFieldSetMapper" />
+	 				<!--
+	 					만약에 데이터 타입 변환할 필요가 없다면
+	 					아래와 같이 BeanWrapperFieldSetMapper를 사용하세요. 
+	 				 -->
+	 				 <!--
+	 				 <bean 
+	 				 	class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+	 				 	<property name="prototypeBeanName" value="report" />
+	 				 </bean>
+	 				  -->
+	 			</property>
+	 		</bean>
+	 	</property>
+	 </bean>
+	 
+	 <!-- ItemProcessor 빈 생성 -->
+	 <bean id="itemProcessor" class="com.koitt.model.CustomItemProcessor" />
+	 
+	 <!--
+	 	ItemWriter 빈 생성
+	 	rootTagName: 최상위에 위치할 태그 이름 
+	  -->
+	 <bean id="xmlItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
+	 	<property name="resource" ref="outputFile" />
+	 	<property name="marshaller" ref="reportMarshaller" />
+	 	<property name="rootTagName" value="report" />
+	 </bean>
+	 
+	 <!--
+	 	Marshaller 빈 생성
+	 	마샬링(marshalling): 하나의 데이터 형식을 다른 데이터 형식으로 변환하는 과정
+	 	여기서는 Report 객체를 xml 파일 데이터 형식으로 변환 
+	  -->
+	 <bean id="reportMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+	 	<property name="classesToBeBound">
+	 		<list>
+	 			<value>com.koitt.model.Report</value>
+	 		</list>
+	 	</property>
+	 </bean>
+	 
+	 <!--
+	 	Batch Job 생성
+	 	commit-interval 속성: chunkSize.
+	 		reader가 읽고 processor가 처리한 item들을 한번에 writer에 전달할 개수를 의미.
+	 		reader가 읽고나서 processor가 처리한 개수가 commit-interval개 만큼 쌓이면
+	 		writer에 item들을 보내서 write하게 된다.
+	 		(자바과정에서 파일 전송 시, buffering 하는 것과 동일한 원리)
+	 		Spring Batch에서는 한번에 writer에 전달하는 것을 하나의 트랜젝션 단위로 본다.  
+	  -->
+	 <batch:job id="csvToXmlJob">
+	 	<batch:step id="step1">
+	 		<batch:tasklet>
+	 			<batch:chunk reader="csvFileItemReader" processor="itemProcessor" 
+	 				writer="xmlItemWriter" commit-interval="10" />
+	 		</batch:tasklet>
+	 	</batch:step>
+	 </batch:job>
+
+</beans>

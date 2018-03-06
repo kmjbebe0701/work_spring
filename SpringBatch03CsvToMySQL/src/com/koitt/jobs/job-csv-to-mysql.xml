@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- VO클래스 빈 생성 -->
+	<bean id="report" class="com.koitt.model.Report" scope="prototype" />
+	
+	<!-- ItemReader 빈 생성 (01번 예제의 ItemReader와 동일) -->
+	<bean id="csvFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="file:c:/sample/ex03/report.csv" />
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+	 			<property name="lineTokenizer">
+					<bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="names" value="date, impressions, clicks, earning" />
+						<property name="delimiter" value="," />
+					</bean>
+				</property>
+				<property name="fieldSetMapper">
+					<bean class="com.koitt.model.ReportFieldSetMapper"></bean>
+					<!-- <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+						<property name="prototypeBeanName" value="report" />
+					</bean> -->
+				</property>
+			</bean>
+		</property>
+		<property name="linesToSkip" value="1" />
+	</bean>
+	
+	<!-- 
+		ItemWriter 생성
+		CDATA 영역: 해당영역에는 태그가 없음을 parser에 알리기 위해 사용
+	 -->
+	<bean id="mysqlItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql">
+			<value>
+				<![CDATA[
+					INSERT INTO report (date, impressions, clicks, earning)
+					VALUES (:date, :impressions, :clicks, :earning)
+				]]>
+			</value>
+		</property>
+		<!-- 
+			객체의 필드명과 SQL의 name 파라미터 (콜론 + 객체필드명) 사이를 자동으로 연결 (Mapping) 시켜준다
+		 -->
+		 <property name="itemSqlParameterSourceProvider">
+		 	<bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
+		 </property>
+	</bean>
+	
+	<!-- Batch Job 생성 -->
+	<batch:job id="csvToMySqlJob">
+		<batch:step id="step1">
+			<batch:tasklet>
+				<batch:chunk reader="csvFileItemReader" writer="mysqlItemWriter" commit-interval="2" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+	
+	
+</beans>

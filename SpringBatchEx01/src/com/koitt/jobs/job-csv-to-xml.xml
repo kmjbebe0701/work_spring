@@ -33,6 +33,7 @@
 	 <!-- ItemReader 빈 생성 -->
 	 <bean id="csvFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
 	 	<property name="resource" ref="inputFile" />
+	 	<property name="encoding" value="utf-8" />
 	 	<property name="lineMapper">
 	 		<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
 	 			<property name="lineTokenizer">

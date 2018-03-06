@@ -19,20 +19,10 @@
 	 	scope 속성 값을 prototype으로 설정한다.
 	 -->
 	 <bean id="report" class="com.koitt.model.Report" scope="prototype" />
-	 
-	 <!-- JobParameters 객체를 전달받아 객체 내에 있는 값을 이용하여 입력파일 객체 생성 -->
-	 <bean id="inputFile" class="org.springframework.core.io.FileSystemResource" scope="step">
-	 	<constructor-arg value="#{jobParameters[inputFile]}" />
-	 </bean>
-	 
-	 <!-- JobParameters 객체를 전달받아 객체 내에 있는 값을 이용하여 출력파일 객체 생성 -->
-	 <bean id="outputFile" class="org.springframework.core.io.FileSystemResource" scope="step">
-	 	<constructor-arg value="#{jobParameters[outputFile]}" />
-	 </bean>
-	 
+
 	 <!-- ItemReader 빈 생성 -->
 	 <bean id="csvFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
-	 	<property name="resource" ref="inputFile" />
+	 	<property name="resource" value="file:c:/sample/ex01/report.csv" />
 	 	<property name="encoding" value="utf-8" />
 	 	<property name="lineMapper">
 	 		<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
@@ -68,7 +58,8 @@
 	 	rootTagName: 최상위에 위치할 태그 이름 
 	  -->
 	 <bean id="xmlItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
-	 	<property name="resource" ref="outputFile" />
+	 	<property name="resource" value="file:c:/sample/ex01/report.xml" />
+	 	<property name="encoding" value="utf-8" />
 	 	<property name="marshaller" ref="reportMarshaller" />
 	 	<property name="rootTagName" value="report" />
 	 </bean>

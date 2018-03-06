@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- 
+		ItemReader 빈 생성 
+		unmarshaller: xml -> 파일
+		marshaller: 파일 -> xml
+	-->
+	<bean id="xmlItemReader" class="org.springframework.batch.item.xml.StaxEventItemReader">
+		<property name="fragmentRootElementName" value="record" />
+		<property name="resource" value="file:c:/sample/ex04/report.xml" />
+		<property name="unmarshaller" ref="reportUnmarshaller" />
+	</bean>
+	
+	<!-- 
+		UnMArshaller 빈 생성
+		생성 방법은 Marshaller 생성방법과 동일
+		(여기서 UnMarshaller 뜻은 xml 파일을 VO로 변환한다는 뜻)
+	 -->
+	 <bean id="reportUnmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+	 	<property name="classesToBeBound">
+	 		<list>
+	 			<value>com.koitt.model.Report</value>
+	 		</list>
+	 	</property>
+	 </bean>
+	
+	<!-- ItemProcessor 빈 생성 -->
+	<bean id="itemProcessor" class="com.koitt.model.CustomItemProcessor" />
+	
+	<!-- ItemWriter 빈 생성 (2번 예제의 ItemWriter와 동일) -->
+	<bean id="csvFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+		<property name="resource" value="file:c:/sample/ex04/report.csv" />
+		<property name="appendAllowed" value="false" />
+		<property name="lineAggregator">
+			<bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+				<property name="delimiter" value="|" />
+				<property name="fieldExtractor">
+					<bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+						<property name="names" value="refId, name, age, dob, income" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- Batch Job 빈 생성 -->
+	<batch:job id="xmlToCsvJob">
+		<batch:step id="step1">
+			<batch:tasklet>
+				<batch:chunk reader="xmlItemReader" processor="itemProcessor" writer="csvFileItemWriter" commit-interval="1" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+	
+</beans>

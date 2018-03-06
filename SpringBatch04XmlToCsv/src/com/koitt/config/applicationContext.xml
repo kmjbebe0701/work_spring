@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- ChunkSize 만큼을 하나의 트랜젝션 단위로 하기 위해 빈 생성 -->
+	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
+	
+	<!-- job-meta를 메모리에 저장하기 -->
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+	
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+	
+	<import resource="../jobs/job-xml-to-csv.xml"/>
+	
+</beans>

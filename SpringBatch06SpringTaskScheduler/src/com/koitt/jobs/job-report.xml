@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!--
+		ItemReader(FlatFileItemReader): csv 파일 읽기
+		ItemProcessor(CustomItemProcessor): 데이터 가공/처리
+		ItemWriter(StaxEventItemWriter): xml 파일로 쓰기
+		
+		ItemReader, ItemWriter는 스프링에서 이미 구현한 클래스를 사용
+		ItemProcessor는 우리가 작성한 클래스를 사용 
+	 -->
+
+	 <!-- ItemReader 빈 생성 -->
+	 <bean id="csvFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+	 	<property name="resource" value="file:c:/sample/ex01/report.csv" />
+	 	<property name="encoding" value="utf-8" />
+	 	<property name="lineMapper">
+	 		<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+	 			<property name="lineTokenizer">
+	 				<bean 
+	 					class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+	 					<property name="names" value="id, sales, qty, staffName, date" />
+	 					<property name="delimiter" value="," />
+	 				</bean>
+	 			</property>
+	 			<property name="fieldSetMapper">
+	 				<bean class="com.koitt.model.ReportFieldSetMapper" />
+	 				<!--
+	 					만약에 데이터 타입 변환할 필요가 없다면
+	 					아래와 같이 BeanWrapperFieldSetMapper를 사용하세요. 
+	 				 -->
+	 				 <!--
+	 				 <bean 
+	 				 	class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+	 				 	<property name="prototypeBeanName" value="report" />
+	 				 </bean>
+	 				  -->
+	 			</property>
+	 		</bean>
+	 	</property>
+	 </bean>
+	 
+	<!-- ItemWriter 빈 생성 -->
+	<bean id="customItemWriter" class="com.koitt.model.CustomItemWriter" />
+	
+	<!-- Batch Job 생성 -->
+	<batch:job id="reportJob">
+		<batch:step id="step1">
+			<batch:tasklet>
+				<batch:chunk reader="csvFileItemReader" writer="customItemWriter" commit-interval="2" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</beans>

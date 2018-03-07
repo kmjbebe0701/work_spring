@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- MySQL 데이터 베이스 접속 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/koitt?useSSL=false" />
+		<property name="username" value="root" />
+		<property name="password" value="koitt" />
+	</bean>
+	
+	<!-- ChunkSize 만큼을 트랜젝션 단위로 처리하기 위한 TransactionManager 빈 생성-->
+	<bean id="transactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
+	
+	<!-- job-meta를 메모리에 저장할 때 사용 -->
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean">
+		<property name="transactionManager" ref="transactionManager" />
+	</bean>
+	
+	<!-- JobLauncher 빈 생성 -->
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+	</bean>
+	
+	<!-- Job 생성하는 스프링 xml 파일  import -->
+	<import resource="../jobs/job-mysql-to-csv.xml" />
+	
+	
+	
+	
+</beans>

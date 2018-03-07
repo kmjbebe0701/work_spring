@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+	
+	<!-- 
+		ItemReader 빈 생성
+		scope="step": step 마다 객체가 새롭게 생성
+		scope="singleton": 싱글턴 (객체가 하나만 생성)
+		scope="prototype": 매번 객체 생성
+		
+		#{jobParameters['age']}: TestDrive 에서 Job을 실행할 때 넘겨주는 JobParameters 객체에 'age'키에 원하는 조건의
+				나이 값을 담아서 아래에 있는 SQL문에 전달하게 한다.
+	-->
+	<bean id="mySqlItemReader" class="org.springframework.batch.item.database.JdbcCursorItemReader" scope="step">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql" value="SELECT * FROM board " />
+		<property name="rowMapper">
+			<bean class="com.koitt.model.BoardRowMapper" />
+		</property>
+	</bean>
+	
+	<!-- ItemWriter 빈 생성 (2번 예제의 ItemWriter와 동일) -->
+	<bean id="csvFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+		<property name="resource" value="file:c:/sample/prac02/board.csv" />
+		<property name="appendAllowed" value="false" />
+		<property name="lineAggregator">
+			<bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+				<property name="delimiter" value="|" />
+				<property name="fieldExtractor">
+					<bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+						<property name="names" value="no, title, content, user_no, regdate, attachment" />
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="userMarchaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+		<property name="aliases">
+			<util:map id="aliases">
+				<entry key="user" value="com.koitt.model.User" />
+			</util:map>
+		</property>
+	</bean>
+	
+	<!-- Batch Job 생성 -->
+	<batch:job id="mySqlToXmlJob">
+		<batch:step id="step1">
+			<batch:tasklet>
+				<batch:chunk reader="mySqlItemReader" writer="csvFileItemWriter" commit-interval="1" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+	
+	
+	
+	
+</beans>

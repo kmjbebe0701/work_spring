@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 
+		ItemReader 빈 생성 
+		unmarshaller: xml -> 파일
+		marshaller: 파일 -> xml
+	-->
+	<bean id="xmlItemReader" class="org.springframework.batch.item.xml.StaxEventItemReader">
+		<property name="fragmentRootElementName" value="record" />
+		<property name="resource" value="file:c:/sample/ex04/report.xml" />
+		<property name="unmarshaller" ref="reportUnmarshaller" />
+	</bean>
+	
+	<!-- 
+		UnMArshaller 빈 생성
+		생성 방법은 Marshaller 생성방법과 동일
+		(여기서 UnMarshaller 뜻은 xml 파일을 VO로 변환한다는 뜻)
+	 -->
+	 <bean id="reportUnmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+	 	<property name="classesToBeBound">
+	 		<list>
+	 			<value>com.koitt.model.Report</value>
+	 		</list>
+	 	</property>
+	 </bean>
+	
+	<!-- 
+		ItemWriter 생성
+		CDATA 영역: 해당영역에는 태그가 없음을 parser에 알리기 위해 사용
+	 -->
+	<bean id="mysqlItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource" ref="dataSource" />
+		<property name="sql">
+			<value>
+				<![CDATA[
+					INSERT INTO testEx02 (refId, name, age, dob, income)
+					VALUES (:refId, :name, :age, :dob, :income)
+				]]>
+			</value>
+		</property>
+		<!-- 
+			객체의 필드명과 SQL의 name 파라미터 (콜론 + 객체필드명) 사이를 자동으로 연결 (Mapping) 시켜준다
+		 -->
+		 <property name="itemSqlParameterSourceProvider">
+		 	<bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
+		 </property>
+	</bean>
+	
+	<!-- Batch Job 생성 -->
+	<batch:job id="xmlToMySqlJob">
+		<batch:step id="step1">
+			<batch:tasklet>
+				<batch:chunk reader="xmlItemReader" writer="mysqlItemWriter" commit-interval="2" />
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</beans>

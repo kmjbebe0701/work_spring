@@ -3,8 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:batch="http://www.springframework.org/schema/batch"
 	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 	
 	<!-- 
@@ -12,9 +14,7 @@
 		scope="step": step 마다 객체가 새롭게 생성
 		scope="singleton": 싱글턴 (객체가 하나만 생성)
 		scope="prototype": 매번 객체 생성
-		
-		#{jobParameters['age']}: TestDrive 에서 Job을 실행할 때 넘겨주는 JobParameters 객체에 'age'키에 원하는 조건의
-				나이 값을 담아서 아래에 있는 SQL문에 전달하게 한다.
+
 	-->
 	<bean id="mySqlItemReader" class="org.springframework.batch.item.database.JdbcCursorItemReader" scope="step">
 		<property name="dataSource" ref="dataSource" />
@@ -33,7 +33,7 @@
 				<property name="delimiter" value="|" />
 				<property name="fieldExtractor">
 					<bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
-						<property name="names" value="no, title, content, user_no, regdate, attachment" />
+						<property name="names" value="no, title, content, userNo, regdate, attachment" />
 					</bean>
 				</property>
 			</bean>
@@ -43,17 +43,34 @@
 	<bean id="userMarchaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
 		<property name="aliases">
 			<util:map id="aliases">
-				<entry key="user" value="com.koitt.model.User" />
+				<entry key="board" value="com.koitt.model.Board" />
 			</util:map>
 		</property>
 	</bean>
 	
+	<!-- Tasklet 빈 생성 -->
+	<bean id="sendEmailTasklet" class="com.koitt.model.SendEmailTasklet">
+	</bean>
+	
+	<!-- Tasklet 빈 생성: input 폴더 내의 파일을 삭제하는 빈 -->
+	<bean id="fileDeletingTasklet" class="com.koitt.model.FileDeletingTasklet">
+		<property name="directory" value="file:c:/sample/prac02/" />
+	</bean>
+	
+	
+	
 	<!-- Batch Job 생성 -->
-	<batch:job id="mySqlToXmlJob">
-		<batch:step id="step1">
+	<batch:job id="mySqlToCsvJob">
+		<batch:step id="step1" next="step2">
 			<batch:tasklet>
 				<batch:chunk reader="mySqlItemReader" writer="csvFileItemWriter" commit-interval="1" />
 			</batch:tasklet>
+		</batch:step>
+		<batch:step id="step2" next="step3">
+			<batch:tasklet ref="sendEmailTasklet" />
+		</batch:step>
+		<batch:step id="step3">
+			<batch:tasklet ref="fileDeletingTasklet" />
 		</batch:step>
 	</batch:job>
 	

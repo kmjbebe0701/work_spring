@@ -34,7 +34,7 @@
 	
 	<task:scheduler id="scheduler" pool-size="3"/>
 	<task:executor id="executor" pool-size="1"/>
-	<task:annotation-driven executor="executor" scheduler="scheduler" />
+	<task:annotation-driven scheduler="scheduler" />
 	<!-- 
 		pool-size: pool은 스레드 풀을 의미
 			pool-size가 만약 10일 경우, 스레드 10개를 미리 만들어 놓았다가 Scheduler 혹은 Executor 실행요청(cron에 의해 실행)

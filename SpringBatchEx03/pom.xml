@@ -30,14 +30,7 @@
             <artifactId>spring-jdbc</artifactId>
             <version>4.3.14.RELEASE</version>
         </dependency>
-
-        <!-- Spring XML to/back object: xml 파일을 읽고 쓸때 필요 -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <version>4.3.14.RELEASE</version>
-        </dependency>
-
+        
         <!-- MySQL database driver: 데이터베이스 사용을 위해 -->
         <dependency>
             <groupId>mysql</groupId>

@@ -57,13 +57,16 @@
 		<property name="directory" value="file:c:/sample/prac02/" />
 	</bean>
 	
+	<!-- ItemProcessor 빈 생성 -->
+	<bean id="itemProcessor" class="com.koitt.model.CustomItemProcessor" />
 	
 	
 	<!-- Batch Job 생성 -->
 	<batch:job id="mySqlToCsvJob">
 		<batch:step id="step1" next="step2">
 			<batch:tasklet>
-				<batch:chunk reader="mySqlItemReader" writer="csvFileItemWriter" commit-interval="1" />
+				<batch:chunk reader="mySqlItemReader" writer="csvFileItemWriter" commit-interval="1"
+							processor="itemProcessor" />
 			</batch:tasklet>
 		</batch:step>
 		<batch:step id="step2" next="step3">

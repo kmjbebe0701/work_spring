@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.koitt.board.model.Users">
+  	<select id="select-all-users" resultType="Users">
+  		SELECT * FROM users
+  	</select>
+  	
+  	<resultMap type="Users" id="UsersResultMap">
+  		<id property="no" column="no" />
+  		<result property="email" column="email"/>
+  		<result property="password" column="password"/>
+  		<result property="name" column="name"/>
+  		<result property="attachment" column="attachment"/>
+  		<collection property="authorities" ofType="Authority">
+  			<id property="id" column="id" />
+  			<result property="name" column="aname"/>
+  		</collection>
+  	</resultMap>
+  	
+  	<select id="select-users" parameterType="int" resultMap="UsersResultMap">
+  		SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+		FROM users u,
+			(SELECT users_authority.users_no, authority.id, authority.name
+			FROM users_authority, authority
+			WHERE users_authority.authority_id = authority.id) ua
+		WHERE u.no = ua.users_no AND u.no = #{no}
+  	</select>
+  	
+  	<select id="select-users-by-email" parameterType="String" resultMap="UsersResultMap">
+  		SELECT u.no, u.email, u.password, u.name, u.attachment, ua.id, ua.name as "aname"
+		FROM users u,
+			(SELECT users_authority.users_no, authority.id, authority.name
+			FROM users_authority, authority
+			WHERE users_authority.authority_id = authority.id) ua
+		WHERE u.no = ua.users_no AND u.email = #{email}
+  	</select>
+  	
+  	<select id="select-last-insert-id" resultType="int">
+  		SELECT LAST_INSERT_ID()
+  	</select>
+  	
+  	<insert id="insert-users" parameterType="Users" 
+  		useGeneratedKeys="true" keyProperty="no">
+  		INSERT INTO users (email, password, name, attachment)
+  		VALUES (#{email}, #{password}, #{name}, #{attachment})
+  	</insert>
+  	
+  	<insert id="insert-authority" parameterType="Users">
+  		INSERT INTO users_authority(users_no, authority_id) VALUES
+  		<foreach collection="authorities" item="item" separator=", ">
+  			(#{no}, #{item.id})
+  		</foreach>
+  	</insert>
+  	
+  	<update id="update-users" parameterType="Users">
+  		UPDATE users SET password = #{password}, name = #{name}, attachment = #{attachment}
+  		WHERE no = #{no}
+  	</update>
+  	
+  	<delete id="delete-all-users">
+  		DELETE FROM users
+  	</delete>
+  	
+  	<select id="count-users" resultType="int">
+  		SELECT COUNT(*) FROM users
+  	</select>
+  	
+  	<delete id="delete-all-users-authority">
+  		DELETE FROM users_authority
+  	</delete>
+  	
+  	<select id="count-users-authority" resultType="int">
+  		SELECT COUNT(*) FROM users_authority
+  	</select>
+  	
+  </mapper>
+  
+  
+  
+  
+  
+  
+  

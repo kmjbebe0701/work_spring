@@ -169,8 +169,17 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public String getImgPath(HttpServletRequest request, String filename) {
-		// 컨텍스트 경로 가져오기 (localhost:8080/Spring16BoardMVCMyBatisFileUpload)
+		// 컨텍스트 경로 가져오기 (/Spring20BoardRest)
 		String contextPath = request.getContextPath();
+		
+		// http://192.168.0.11:8080/Spring20BoardRest/(요청한 주소)
+		String url = request.getRequestURL().toString();
+		
+		// "/Spring20BoardRest"가 시작되는 index 번호
+		int indexOf = url.indexOf(contextPath);
+		
+		// http://192.168.0.11:8080/Spring20BoardRest
+		String serverUrl = url.substring(0, indexOf) + contextPath;
 		
 		// 파일의 확장자 추출
 		if (filename != null && !filename.trim().isEmpty()) {
@@ -182,7 +191,7 @@ public class FileServiceImpl implements FileService {
 			case ".jpg":
 			case ".jpeg":
 			case ".png":
-				return contextPath + UPLOAD_FOLDER + "/" + filename;
+				return serverUrl + UPLOAD_FOLDER + "/" + filename;
 			}
 		}
 		

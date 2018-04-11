@@ -40,6 +40,9 @@ public interface UsersService {
 	
 	// 비밀번호 일치 여부 확인하는 메소드
 	public boolean isPasswordMatched(String oldPassword) throws UsersException;
+	
+	// 비밀번호 일치 여부 확인하는 메소드 (이메일, 비밀번호 이용)
+	public boolean isPasswordMatched(String email, String oldPassword) throws UsersException;
 }
 
 

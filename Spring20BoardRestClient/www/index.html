@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, 
+		user-scalable=no, maximum-scale=1, minimum-scale=1">
+	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+	<title>게시판 로그인</title>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="header">
+			<h1>게시판 로그인</h1>
+		</div>
+		
+		<div data-role="content">
+			<form id="frmLogin">
+				<div data-role="fieldcontain">
+					<label for="email">이메일</label>
+					<input type="email" name="email" id="email">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="password">비밀번호</label>
+					<input type="password" name="password" id="password">
+				</div>
+				
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<a href="join.html" data-role="button" id="btnJoin">회원가입</a>
+					</div>
+					<div class="ui-block-b">
+						<a href="#" data-role="button" id="btnLogin">로그인</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="js/jquery-1.12.4.js"></script>
+	<script src="js/jquery.mobile-1.4.5.js"></script>
+	<script>
+		var REST_URI = 'http://192.168.0.11:8080/Spring20BoardRest/rest';
+
+		// jQueryMobile 페이지 관련 이벤트
+		
+		// 페이지를 생성하기 바로 전에 실행
+		$(document).on('pagebeforecreate', function() {
+			console.log('pagebeforecreate 이벤트 발생');
+		});
+
+		// 페이지를 생성하고 실행
+		$(document).on('pagecreate', function() {
+			console.log('pagecreate 이벤트 발생');
+		});
+
+		// 페이지를 이동하기 바로 전에 실행
+		$(document).on('pagebeforechange', function() {
+			console.log('pagebeforechange 이벤트 발생');
+		});
+
+		// 페이지를 이동하고 실행
+		$(document).on('pagechange', function() {
+
+			// 기존 버튼에 추가된 click 이벤트를 제거
+			$('#btnLogin').unbind('click');
+
+			// 버튼에 click 이벤트 추가
+			$('#btnLogin').bind('click', function(event) {
+				// 기본 이벤트 동작하지 않도록 하기
+				event.preventDefault();
+
+				// Form 데이터 가져오기
+				var formData = getFormData('frmLogin');
+
+				// 두 번 실행 방지를 위해 버튼 비활성
+				$('#btnLogin').prop('disabled', true);
+
+				$.ajax({
+					type: 'post',
+					url: REST_URI + '/user/login',
+					data: formData,
+					processData: false,
+					contentType: 'application/json',
+					success: function(data, textStatus, xhr) {
+						// 서버의 응답을 받으면 비활성했던 버튼 활성화
+						$('#btnLogin').prop('disabled', false);
+
+						// 서버로부터 전달받은 base64 인코딩 값을 클라이언트 저장소에 저장
+						sessionStorage.setItem('base64Credentials', data.credentials);
+						sessionStorage.setItem('usersNo', data.usersNo);
+
+						// 로그인되면 home.html로 이동
+						$.mobile.changePage('home.html');
+
+						console.log(JSON.stringify(data));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(xhr));
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						// 서버의 응답을 받으면 비활성했던 버튼 활성화
+						$('#btnLogin').prop('disabled', false);
+
+						console.log(JSON.stringify(jqXHR));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(errorThrown));
+
+						if (jqXHR.status == 401) {
+							alert('등록된 사용자가 아니거나 비밀번호를 잘못 입력하셨습니다.');
+						}
+					}
+				});
+				
+			});
+
+			$('#btnJoinSubmit').unbind('click');
+			$('#btnJoinSubmit').bind('click', function(event) {
+				// 기본 이벤트 동작하지 않도록 하기
+				event.preventDefault();
+
+				// FormData 가져오기
+				//var formData = getFormData('frmJoin');
+				var form = $('#frmJoin')[0];
+				var formData = new FormData(form);
+
+				// 두 번 실행 방지를 위해 버튼 비활성
+				$('#btnJoinSubmit').prop('disabled', true);
+
+				/*
+					파일을 전송하기 위해서는 enctype을 multipart/form-data로 설정하여
+					서버에 전송을 해야하는데,
+					multipart/form-data를 사용하게 되면 form에 입력한 내용은
+					JSON 형태로 보낼 수 없게 된다.
+					따라서 contentType의 값은 false로 설정한다.
+				*/
+				$.ajax({
+					type: 'post',
+					url: REST_URI + '/user',
+					enctype: 'multipart/form-data',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function(data, textStatus, xhr) {
+						$('#btnJoinSubmit').prop('disabled', false);
+						$.mobile.changePage('index.html');
+
+						console.log(JSON.stringify(data));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(xhr));
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						$('#btnJoinSubmit').prop('disabled', false);
+
+						console.log(JSON.stringify(jqXHR));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(errorThrown));
+					}
+				})
+			});
+
+			// home.html 화면을 불러올 때 현재 사용자의 정보 가져오기
+			if (isCurrentPage('/home.html')) {
+
+				/*
+					url: /user/사용자번호 URL를 이용하여 사용자번호에 해당하는 사용자정보 가져오기
+					sessionStorage에 저장했던 usersNo를 이용
+
+					headers: 서버로 요청하는 헤더 내용 작성
+					authorization: 서버에서 전달받은 base64 인코딩 값을 작성
+								인증이 필요한 요청을 보낼때 항상 헤더에 추가한다.
+				*/
+				$.ajax({
+					type: 'get',
+					url: REST_URI + '/user/' + sessionStorage.getItem('usersNo'),
+					headers: {
+						authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+					},
+					dataType: 'json',
+					success: function(data, textStatus, xhr) {
+						$('#home-email').text(data.users.email);
+						$('#home-name').text(data.users.name);
+						$('#home-attachment > img').attr('src', data.src);
+						for (var i=0; i < data.users.authorities.length; i++) {
+							$('#home-authority')
+							.append('<div>' + data.users.authorities[i].type + '</div>');
+						}
+
+						console.log(JSON.stringify(data));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(xhr));
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(JSON.stringify(jqXHR));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
+			// 글 목록 화면
+			else if (isCurrentPage('/board-list.html')) {
+				$.ajax({
+					type: 'get',
+					url: REST_URI + '/board',
+					headers: {
+						authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+					},
+					dataType: 'json',
+					success: function(data, textStatus, xhr) {
+						// 클라이언트 화면에 글 목록 출력
+						for (var i = 0; i < data.boardList.length; i++) {
+							$('#board-list-listview')
+							.append("<li><a href='board/" + data.boardList[i].no + "'>"
+									+ data.boardList[i].title + "</a></li>");
+						}
+						$('#board-list-listview').listview('refresh');
+
+						// 글 목록 각각마다 클릭이벤트 추가
+						$('#board-list-listview li a').unbind('click');
+						$('#board-list-listview li a').bind('click', function(event) {
+							// 기본 이벤트 동작하지 않도록 하기
+							event.preventDefault();
+
+							// board/글번호
+							var href = $(this).attr('href');
+
+							// 글 상세보기 REST API 주소
+							sessionStorage.setItem('currentBoardUrl', href);
+
+							// 글 상세보기 페이지로 이동
+							$.mobile.changePage('board-detail.html');
+						});
+
+						console.log(JSON.stringify(data));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(xhr));
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(JSON.stringify(jqXHR));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
+			// 글 상세보기 화면
+			else if (isCurrentPage('/board-detail.html')) {
+				$.ajax({
+					type: 'get',
+					url: REST_URI + '/' + sessionStorage.getItem('currentBoardUrl'),
+					headers: {
+						authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+					},
+					dataType: 'json',
+					success: function(data, textStatus, xhr) {
+						$('#board-detail-no').text(data.item.no);
+						$('#board-detail-name').text(data.item.users.name);
+						$('#board-detail-regdate').text(data.item.regdate);
+						$('#board-detail-title').text(data.item.title);
+						$('#board-detail-content').text(data.item.content);
+						$('#board-detail-attachment')
+							.attr('href', data.src)
+							.text(data.item.attachment);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(JSON.stringify(jqXHR));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
+		});
+
+		// 앨리먼트 아이디에 해당하는 Form의 데이터를 JSON으로 리턴하는 함수
+		function getFormData(elemId) {
+			// form 데이터 가져오기
+			var formData = $('#' + elemId).serializeArray();
+			
+			// formData를 JSON으로 변경하기
+			var object = {};
+			for (var i = 0; i < formData.length; i++) {
+				object[formData[i].name] = formData[i].value;
+			}
+			var jsonData = JSON.stringify(object);
+			
+			return jsonData;
+		}
+
+		// 현재 페이지의 URL 주소 확인하는 함수
+		function isCurrentPage(pageUrl) {
+			var href = $(location).attr('href');
+			var index = href.lastIndexOf('/');
+			var currentUrl = href.substring(index);
+
+			console.log('href: ' + href);
+			console.log('index: ' + index);
+			console.log('currentUrl: ' + currentUrl);
+
+			return pageUrl == currentUrl;
+		}
+		 
+	</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "com.koitt.board",
+  "version": "0.0.1",
+  "displayName": "Koitt Board",
+  "cordova": {
+    "platforms": [],
+    "plugins": {
+      "cordova-plugin-whitelist": {}
+    }
+  },
+  "dependencies": {
+    "cordova-plugin-whitelist": "^1.3.3"
+  }
+}

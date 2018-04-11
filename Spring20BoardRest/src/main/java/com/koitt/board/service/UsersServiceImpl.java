@@ -134,6 +134,14 @@ public class UsersServiceImpl implements UsersService {
 		return passwordEncoder.matches(oldPassword, users.getPassword());
 	}
 
+	@Override
+	public boolean isPasswordMatched(String email, String oldPassword) throws UsersException {
+		// 현재 로그인한 사용자의 암호화된 비밀번호를 가져온다.
+		Users users = usersDao.selectByEmail(email);
+		
+		// 입력한 비밀번호와 기존 비밀번호를 비교하여 일치하면 true, 아니면 false 리턴
+		return passwordEncoder.matches(oldPassword, users.getPassword());
+	}
 }
 
 

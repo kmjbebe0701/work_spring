@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, 
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, 
 		user-scalable=no, maximum-scale=1, minimum-scale=1">
-	<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
-	<title>게시판 로그인</title>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+<title>게시판 로그인</title>
 </head>
 <body>
 	<div data-role="page">
 		<div data-role="header">
 			<h1>게시판 로그인</h1>
 		</div>
-		
+
 		<div data-role="content">
 			<form id="frmLogin">
 				<div data-role="fieldcontain">
-					<label for="email">이메일</label>
-					<input type="email" name="email" id="email">
+					<label for="email">이메일</label> <input type="email" name="email"
+						id="email">
 				</div>
 				<div data-role="fieldcontain">
-					<label for="password">비밀번호</label>
-					<input type="password" name="password" id="password">
+					<label for="password">비밀번호</label> <input type="password"
+						name="password" id="password">
 				</div>
-				
+
 				<div class="ui-grid-a">
 					<div class="ui-block-a">
 						<a href="join.html" data-role="button" id="btnJoin">회원가입</a>
@@ -488,30 +489,30 @@
 			}
 
 			// 회원 삭제 확인 화면
-			else if (isCurrentPage('/board-remove-confirm.html')) {
-				$('#btnBoardDelSubmit').unbind('click');
-				$('#btnBoardDelSubmit').bind('click', function(event) {
+			else if (isCurrentPage('/user-remove-confirm.html')) {
+				$('#btnUserDelSubmit').unbind('click');
+				$('#btnUserDelSubmit').bind('click', function(event) {
 					// 기본 동작 막기
 					event.preventDefault();
 
 					// 두 번 실행 방지
-					$('#btnBoardDelSubmit').prop('disabled', true);
+					$('#btnUserDelSubmit').prop('disabled', true);
 
 					// 삭제
 					$.ajax({
 						type: 'delete',
-						url: REST_URI + '/' + sessionStorage.getItem('currentBoardUrl'),
+						url: REST_URI + '/user/' + sessionStorage.getItem('usersNo'),
 						headers: {
 							authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
 						},
 						success: function(data, textStatus, xhr) {
-							$('#btnBoardDelSubmit').prop('disabled', false);
-							$.mobile.changePage('board-list.html');
+							$('#btnUserDelSubmit').prop('disabled', false);
+							$.mobile.changePage('home.html');
 						},
 						error: function(jqXHR, textStatus, errorThrown) {
-							$('#btnBoardDelSubmit').prop('disabled', false);
+							$('#btnUserDelSubmit').prop('disabled', false);
 							if (jqXHR.status == 401) {
-								alert('본인이 작성한 게시물이 아니기 때문에 삭제할 수 없습니다.');
+								alert('');
 							}
 						}
 					});

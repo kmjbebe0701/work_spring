@@ -1,6 +1,5 @@
 package com.koitt.board.controller;
 
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 

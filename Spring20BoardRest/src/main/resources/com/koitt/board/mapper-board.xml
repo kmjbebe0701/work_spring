@@ -7,7 +7,7 @@
   	<insert id="insert-board" parameterType="Board"
   		useGeneratedKeys="true" keyProperty="no">
   		INSERT INTO board (title, content, user_no, regdate, attachment)
-  		VALUES (#{title}, #{content}, #{userNo}, CURDATE(), #{attachment}) 
+  		VALUES (#{title}, #{content}, #{userNo}, CURTIME(), #{attachment}) 
   	</insert>
   	
   	<resultMap type="Board" id="boardResultMap">
@@ -37,7 +37,7 @@
   	</select>
   	
   	<update id="update-board" parameterType="Board">
-  		UPDATE board SET title = #{title}, content = #{content}, regdate = CURDATE(),
+  		UPDATE board SET title = #{title}, content = #{content}, regdate = CURTIME(),
   		attachment = #{attachment}
   		WHERE no = #{no}  
   	</update>

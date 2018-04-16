@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>회원정보수정</title>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="header" data-add-back-btn="true">
+			<h1>회원정보수정</h1>
+			<a href="user-remove-confirm.html" class="ui-btn-right" 
+				data-icon="delete" id="btnUserDelConfirm">탈퇴하기</a>
+		</div>
+		
+		<div data-role="content">
+			<form id="frmUserModify">
+				<div data-role="fieldcontain">
+					<label for="user-setting-id">사용자번호</label>
+					<div id="user-setting-id"></div>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="user-setting-email">이메일</label>
+					<div id="user-setting-email"></div>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="user-setting-old-password">이전 비밀번호</label>
+					<input type="password" name="oldPassword" id="user-setting-old-password">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="user-setting-new-password">새 비밀번호</label>
+					<input type="password" name="newPassword" id="user-setting-new-password">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="user-setting-name">이름</label>
+					<input type="text" name="name" id="user-setting-name">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="user-setting-attachment">프로필 사진</label>
+					<input type="file" name="attachment" id="user-setting-attachment">
+				</div>
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<input type="reset" id="btnUserModifyReset" value="전체 지우기">
+					</div>
+					<div class="ui-block-b">
+						<input type="submit" id="btnUserModifySubmit" value="수정하기">
+					</div>
+				</div>
+				<!-- 수정할 사용자의 no 값은 sessionStorage에 있는 'userNo' 값을 사용 -->
+			</form>
+		</div>
+	</div>
+</body>
+</html>

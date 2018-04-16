@@ -39,7 +39,7 @@
 	<script src="js/jquery-1.12.4.js"></script>
 	<script src="js/jquery.mobile-1.4.5.js"></script>
 	<script>
-		var REST_URI = 'http://192.168.0.11:8080/Spring20BoardRest/rest';
+		var REST_URI = 'http://192.168.0.42:8080/Spring20BoardRest/rest';
 
 		// jQueryMobile 페이지 관련 이벤트
 		
@@ -252,18 +252,171 @@
 					success: function(data, textStatus, xhr) {
 						$('#board-detail-no').text(data.item.no);
 						$('#board-detail-name').text(data.item.users.name);
-						$('#board-detail-regdate').text(data.item.regdate);
+
+						// 1970년 1월 1일부터 현재까지의 밀리초를 한국 시간으로 변경
+						var krDate = new Date(data.item.regdate)
+										.toLocaleString('ko-KR', {timeZone: 'Asia/Seoul'});
+
+						// 변경한 한국시간을 페이지에 출력
+						$('#board-detail-regdate').text(krDate);
 						$('#board-detail-title').text(data.item.title);
 						$('#board-detail-content').text(data.item.content);
 						$('#board-detail-attachment')
 							.attr('href', data.src)
 							.text(data.item.attachment);
+
+						console.log("이미지 경로: " + data.imgPath);
+						console.log("타입: " + (typeof data.imgPath));
+						// 만약에 이미지 파일 경로가 존재하면 이미지를 출력
+						if (data.imgPath != null) {
+							console.log("실행");
+							var imgTag = $('<img>');
+							imgTag.attr('src', data.imgPath);
+							$('#board-detail-attachment').after(imgTag);
+						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {
 						console.log(JSON.stringify(jqXHR));
 						console.log(JSON.stringify(textStatus));
 						console.log(JSON.stringify(errorThrown));
 					}
+				});
+			}
+			// 글 작성하기 화면
+			else if (isCurrentPage('/board-add.html')) {
+				$('#btnBoardSubmit').unbind('click');
+				$('#btnBoardSubmit').bind('click', function(event) {
+					// 기본 이벤트 동작하지 않도록 하기
+					event.preventDefault();
+
+					// #board-add-users-no에 현재 사용자 번호 값을 설정
+					$('#board-add-users-no').val(sessionStorage.getItem('usersNo'));
+
+					// FormData 가져오기
+					var form = $('#frmBoard')[0];
+					var formData = new FormData(form);
+
+					// 두 번 실행 방지를 위해 버튼 비활성
+					$('#btnBoardSubmit').prop('disabled', true);
+
+					$.ajax({
+						type: 'post',
+						url: REST_URI + '/board',
+						headers: {
+							authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+						},
+						enctype: 'multipart/form-data',
+						data: formData,
+						processData: false,
+						contentType: false,
+						success: function(data, textStatus, xhr) {
+							$('#btnBoardSubmit').prop('disabled', false);
+							$.mobile.changePage('board-list.html');
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							$('#btnBoardSubmit').prop('disabled', false);
+							console.log(JSON.stringify(jqXHR));
+							console.log(JSON.stringify(errorThrown));
+						}
+					});
+				});
+			}
+			// 글 수정하기 화면
+			else if (isCurrentPage('/board-modify.html')) {
+				$.ajax({
+					type: 'get',
+					url: REST_URI + "/" + sessionStorage.getItem('currentBoardUrl'),
+					headers: {
+						authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+					},
+					dataType: 'json',
+					success: function(data, textStatus, xhr) {
+						$('#board-modify-no-text').text(data.item.no);
+						$('#board-modify-name').text(data.item.users.name);
+						$('#board-modify-title').val(data.item.title);
+						$('#board-modify-content').text(data.item.content);
+						$('#board-modify-email').val(data.item.users.email);
+
+						// 글 수정하기 버튼 클릭 이벤트
+						$('#btnBoardModifySubmit').unbind('click');
+						$('#btnBoardModifySubmit').bind('click', function(event) {
+							// 기본 동작 막기
+							event.preventDefault();
+
+							// 두 번 실행 방지를 위해 버튼 비활성
+							$('#btnBoardModifySubmit').prop('disabled', true);
+
+							// FormData 가져오기
+							var form = $('#frmBoardModify')[0];
+							var formData = new FormData(form);
+
+							/*
+								수정한 내용 전송
+
+								주의사항: multipart/form-data 전송 시에는 POST로 전송
+								(원래 수정은 PUT으로 보내는 것이 일반적이나, 
+								multipart/form-data는 그렇지 않다.)
+								https://blog.outsider.ne.kr/1001 블로그 글 참고
+							*/
+							$.ajax({
+								type: 'post',
+								url: REST_URI + '/' + sessionStorage.getItem('currentBoardUrl'),
+								headers: {
+									authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+								},
+								enctype: 'multipart/form-data',
+								data: formData,
+								processData: false,
+								contentType: false,
+								success: function(data, textStatus, xhr) {
+									$('#btnBoardModifySubmit').prop('disabled', false);
+									$.mobile.changePage('board-list.html');
+								},
+								error: function(jqXHR, textStatus, errorThrown) {
+									$('#btnBoardModifySubmit').prop('disabled', false);
+									if (jqXHR.status == 401) {
+										alert('본인이 작성한 게시물이 아니거나, 비밀번호를 잘못 입력하셨습니다.');
+									}
+								}
+							});
+							
+						});
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(JSON.stringify(jqXHR));
+						console.log(JSON.stringify(textStatus));
+						console.log(JSON.stringify(errorThrown));
+					}
+				});
+			}
+			// 글 삭제 확인 화면
+			else if (isCurrentPage('/board-remove-confirm.html')) {
+				$('#btnBoardDelSubmit').unbind('click');
+				$('#btnBoardDelSubmit').bind('click', function(event) {
+					// 기본 동작 막기
+					event.preventDefault();
+
+					// 두 번 실행 방지
+					$('#btnBoardDelSubmit').prop('disabled', true);
+
+					// 삭제
+					$.ajax({
+						type: 'delete',
+						url: REST_URI + '/' + sessionStorage.getItem('currentBoardUrl'),
+						headers: {
+							authorization: 'Basic ' + sessionStorage.getItem('base64Credentials')
+						},
+						success: function(data, textStatus, xhr) {
+							$('#btnBoardDelSubmit').prop('disabled', false);
+							$.mobile.changePage('board-list.html');
+						},
+						error: function(jqXHR, textStatus, errorThrown) {
+							$('#btnBoardDelSubmit').prop('disabled', false);
+							if (jqXHR.status == 401) {
+								alert('본인이 작성한 게시물이 아니기 때문에 삭제할 수 없습니다.');
+							}
+						}
+					});
 				});
 			}
 		});

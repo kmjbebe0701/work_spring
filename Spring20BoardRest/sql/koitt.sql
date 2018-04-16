@@ -1,3 +1,6 @@
+#특정 테이블 컬럼의 타입을 변경
+ALTER TABLE board MODIFY COLUMN regdate DATETIME;
+
 #데이터베이스 인코딩 변경
 ALTER DATABASE koitt CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
@@ -35,7 +38,7 @@ CREATE TABLE board (
 	title VARCHAR(30) NOT NULL,
 	content VARCHAR(255) NULL,
 	user_no INT NOT NULL,
-	regdate DATE NOT NULL,
+	regdate DATETIME NOT NULL,
 	attachment VARCHAR(255),
 	FOREIGN KEY (user_no) REFERENCES users(no)
 );

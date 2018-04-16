@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>글 작성하기</title>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="header" data-add-back-btn="true">
+			<h1>글 작성하기</h1>
+		</div>
+		
+		<div data-role="content">
+			<form id="frmBoard">
+				<div data-role="fieldcontain">
+					<label for="board-add-title">제목</label>
+					<input type="text" name="title" id="board-add-title">
+				</div>
+				<div data-role="fieldcontain">
+					<label for="board-add-content">내용</label>
+					<textarea name="content" id="board-add-content"></textarea>
+				</div>
+				<div data-role="fieldcontain">
+					<label for="board-add-attachment">첨부파일</label>
+					<input type="file" name="attachment" id="board-add-attachment">
+				</div>
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<input type="reset" id="btnBoardReset" value="전체 지우기">
+					</div>
+					<div class="ui-block-b">
+						<input type="submit" id="btnBoardSubmit" value="글쓰기">
+					</div>
+				</div>
+				<input type="hidden" name="userNo" id="board-add-users-no">
+			</form>
+		</div>
+	</div>
+</body>
+</html>
+
+

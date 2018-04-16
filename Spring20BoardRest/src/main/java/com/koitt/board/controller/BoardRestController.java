@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.koitt.board.model.Board;
 import com.koitt.board.model.BoardException;
-import com.koitt.board.model.FileException;
 import com.koitt.board.service.BoardService;
 import com.koitt.board.service.FileService;
 import com.koitt.board.service.UsersService;

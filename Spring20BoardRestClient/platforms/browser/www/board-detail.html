@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>글 상세보기</title>
+</head>
+<body>
+	<div data-role="page">
+		<div data-role="header" data-add-back-btn="true">
+			<h1>글 상세보기</h1>
+			<a href="board-modify.html" data-icon="edit" id="btnBoardModify">수정하기</a>
+			<a href="board-remove-confirm.html" data-icon="delete" id="btnBoardDelConfirm">삭제하기</a>
+		</div>
+		
+		<div data-role="content">
+			<div data-role="fieldcontain">
+				<label for="board-detail-no">번호</label>
+				<div id="board-detail-no"></div>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="board-detail-name">작성자</label>
+				<div id="board-detail-name"></div>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="board-detail-regdate">작성일</label>
+				<div id="board-detail-regdate"></div>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="board-detail-title">제목</label>
+				<div id="board-detail-title"></div>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="board-detail-content">내용</label>
+				<div id="board-detail-content"></div>
+			</div>
+			<div data-role="fieldcontain">
+				<label for="board-detail-attachment">첨부파일</label>
+				<a id="board-detail-attachment"></a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

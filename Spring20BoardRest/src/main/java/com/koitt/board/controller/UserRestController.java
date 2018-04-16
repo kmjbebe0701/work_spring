@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -134,6 +135,79 @@ public class UserRestController {
 			}
 			
 		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	// 사용자 수정
+	@RequestMapping(value="/user/{no}", method=RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> modifyUser(HttpServletRequest req,
+			String oldPassword, String newPassword, String name,
+			@RequestHeader("Authorization") String authorization,
+			@RequestParam("attachment") MultipartFile attachment) {
+
+		Users users = null;
+		try {
+			// "Basic email:password" 에서 "email:pssword" 부분만 떼어낸다. @PathVariable("no") Integer no,
+	        String base64Credentials = authorization.split(" ")[1];
+	        
+	        // 떼어낸 "email:password" 부분은 base64 인코딩 된 부분이므로 디코딩하여 복원 
+	        String plainCredentials = new String(Base64.decodeBase64(base64Credentials));
+	        
+	        // 복원한 내용을 ":" 기준으로 나누어서 password 값을 뽑아내어 사용한다.
+	        String email = plainCredentials.split(":")[0];
+	        
+	        
+	        boolean isMatched = usersService.isPasswordMatched(email, oldPassword);
+			
+			/*
+			 // 기존 비밀번호가 일치하는지 확인하기
+			 boolean isMatched = usersService.isPasswordMatched(oldPassword);
+			 */
+	        
+			// 비밀번호가 일치하면 사용자 정보를 변경한다.
+			if (isMatched) {
+				
+
+				// 현재 로그인한 사용자 정보를 email 값을 이용하여 가져오기
+				Users oldUsers = usersService.detailByEmail(email);
+
+				// 새로 변경할 프로필 사진을 서버에 저장한다.
+				String filename = fileService.add(req, attachment);
+
+				// 데이터베이스에 저장할 users 객체 생성
+				users = new Users(oldUsers.getNo(), email, newPassword, name, filename);
+
+
+				// 수정할 정보를 데이터베이스에 전달
+				String toDeleteFile = usersService.modify(users);
+
+				// 기존 프로필 사진 삭제
+				fileService.remove(req, toDeleteFile);
+				
+			}
+			// 기존 비밀번호가 일치하지 않은 경우에는 오류메시지를 수정페이지에 출력한다.
+			else {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+
+			// Base64 인코딩 전 평문
+			String plainCredentials2 = email + ":" + newPassword;
+
+			// 평문을 Base64로 인코딩
+			String base64Credentials2 = new String(Base64.encodeBase64(plainCredentials2.getBytes()));
+
+			System.out.println("인코딩 한 값: " + base64Credentials2);
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("credentials", base64Credentials);
+			resultMap.put("usersNo", users.getNo());
+
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+
+			// 서버 오류가 발생했다는 응답코드를 클라이언트로 전달
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
